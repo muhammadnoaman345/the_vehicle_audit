@@ -35,6 +35,11 @@ input[type="number"] {
   appearance: textfield;
 }
 
+button:focus {
+  outline: none;
+  border: none;
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
