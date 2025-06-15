@@ -1,4 +1,5 @@
-import { Hero } from "@/components/Hero/Hero";
+import Hero from "@/components/Hero/Hero";
+import OurServices from "@/components/OurServices/OurServices";
 import WhyChooseUs from "@/components/WhyChooseUs/WhyChooseUs";
 
 function Home() {
@@ -7,6 +8,7 @@ function Home() {
       {/* Hero Section */}
       <Hero />
       <WhyChooseUs />
+      <OurServices />
     </div>
   );
 }

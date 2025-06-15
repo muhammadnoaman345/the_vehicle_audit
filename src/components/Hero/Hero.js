@@ -5,14 +5,14 @@ import { ArrowRight } from "lucide-react";
 import { images } from "../../../public/assets/images";
 import Image from "next/image";
 
-export const Hero = () => {
+const Hero = () => {
   const [searchEntity, setSearchEntity] = useState(1);
 
   return (
     <section className="w-full flex flex-col items-center justify-between gap-6 overflow-hidden">
-      <div className="w-full flex flex-col items-center justify-center gap-6 lg:pl-4 xl:pl-12 py-6 relative rounded-xl overflow-hidden">
+      <div className="w-full flex flex-col items-center justify-center gap-6 max-sm:px-3 lg:pl-4 xl:pl-12 py-6 relative rounded-xl overflow-hidden">
         {/* Hero Content */}
-        <div className="z-10 w-2/3 sm:w-1/2 flex flex-col items-center justify-center gap-6 py-3 bg-white/85 bg-opacity-50 rounded-xl">
+        <div className="z-10 w-full sm:w-1/2 flex flex-col items-center justify-center gap-6 py-3 bg-white/85 bg-opacity-50 rounded-xl">
           <p className="font-ancola font-bold text-primary text-center text-2xl lg:text-3xl xl:text-5xl">
             Know Your Ride,
             <span className="block mt-3">Before You Buy</span>
@@ -87,3 +87,5 @@ export const Hero = () => {
     </section>
   );
 };
+
+export default Hero;
