@@ -19,4 +19,5 @@ export const images = {
   heroBackground: "/assets/images/hero-car.jpg",
   heroItems,
   serviceItems,
+  carImage: "/assets/images/car.png",
 };

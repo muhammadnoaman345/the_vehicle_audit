@@ -163,7 +163,7 @@ function CarouselPrevious({
       className={cn(
         "absolute size-12 bg-primary hover:bg-primary hover:size-16 border-2 border-white active:border-2 active:border-white focus:border-2 focus:border-white rounded-full",
         orientation === "horizontal"
-          ? "top-1/2 -left-14 -translate-y-1/2"
+          ? "top-2/5 sm:top-1/2 -left-4 sm:-left-14 sm:-translate-y-1/2"
           : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
         className
       )}
@@ -193,7 +193,7 @@ function CarouselNext({
       className={cn(
         "absolute size-12 bg-primary hover:bg-primary hover:size-16 border-2 border-white active:border-2 active:border-white focus:border-2 focus:border-white rounded-full",
         orientation === "horizontal"
-          ? "top-1/2 -right-14 -translate-y-1/2"
+          ? "top-2/5 sm:top-1/2 -right-4 sm:-right-14 sm:-translate-y-1/2"
           : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
         className
       )}

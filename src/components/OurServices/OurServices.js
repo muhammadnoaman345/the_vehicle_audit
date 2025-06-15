@@ -42,7 +42,7 @@ const servicesContent = [
 
 const OurServices = () => {
   return (
-    <div className="w-full px-12">
+    <div className="w-full md:px-12">
       <p className="text-center font-ancola text-primary text-2xl lg:text-3xl xl:text-5xl mb-9">
         Our Services
       </p>
@@ -56,7 +56,10 @@ const OurServices = () => {
         >
           <CarouselContent>
             {servicesContent.map((service, index) => (
-              <CarouselItem key={index} className="md:basis-2/3 lg:basis-1/3">
+              <CarouselItem
+                key={index}
+                className="md:basis-2/3 lg:basis-1/3 md:mx-3"
+              >
                 <ServiceItem
                   ImgPath={images.serviceItems[index]}
                   title={service.title}
@@ -75,7 +78,7 @@ const OurServices = () => {
 
 const ServiceItem = ({ ImgPath, title, description }) => {
   return (
-    <div className="h-[80dvh] flex flex-col items-start justify-around gap-3 2xl:gap-0 bg-primary rounded-xl shadow-lg shadow-gray-400 px-3 py-6">
+    <div className="h-[65dvh] sm:h-[80dvh] flex flex-col items-start justify-around gap-3 2xl:gap-0 bg-primary rounded-xl shadow-xl shadow-gray-400 px-3 py-3 sm:py-6">
       <div className="w-full h-[40dvh]">
         <img
           src={ImgPath}
@@ -85,7 +88,7 @@ const ServiceItem = ({ ImgPath, title, description }) => {
       </div>
 
       <p className="font-hora font-bold text-2xl mt-3">{title}</p>
-      <p className="text-white sm:text-lg">{description}</p>
+      <p className="text-white text-sm sm:text-lg">{description}</p>
     </div>
   );
 };
