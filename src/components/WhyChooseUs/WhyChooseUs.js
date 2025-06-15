@@ -9,19 +9,23 @@ const benefits = [
 
 export default function WhyChooseUs() {
   return (
-    <section className="sm:h-[80dvh] w-full flex max-sm:flex-col items-center justify-between sm:justify-center">
-      <div className="h-1/2 sm:h-full w-full sm:w-1/2 px-10 sm:px-24 sm:py-12 ">
-        <div className="h-full w-full max-sm:py-12 bg-primary rounded-xl flex flex-col items-center justify-center gap-3 sm:gap-6 text-white font-ancola text-2xl sm:text-4xl lg:text-5xl xl:text-6xl tracking-wider">
+    <section className="w-full flex max-sm:flex-col items-center justify-between sm:justify-center">
+      <div className="h-1/2 sm:h-full w-full sm:w-1/2 sm:px-16">
+        <div className="h-full w-full py-16 bg-primary rounded-xl flex flex-col items-center justify-center gap-3 sm:gap-6 text-white font-ancola text-2xl sm:text-4xl lg:text-5xl xl:text-6xl tracking-wider">
           <p>Why</p>
           <p>Choose</p>
           <p className="flex items-center justify-center gap-2">
-            <CircleArrowRight size={64} color="black" />
+            <CircleArrowRight
+              size={64}
+              color="black"
+              className="max-sm:rotate-90"
+            />
             Us
           </p>
         </div>
       </div>
-      <div className="h-1/2 sm:h-full w-full sm:w-1/2 flex flex-col items-center justify-center px-10 sm:pr-16 sm:pl-8 sm:py-9">
-        <p className="max-sm:mt-6 font-hora font-semibold text-lg lg:text-xl xl:text-2xl text-center">
+      <div className="h-1/2 sm:h-full w-full sm:w-1/2 flex flex-col items-center justify-center">
+        <p className="max-sm:mt-6 font-hora font-semibold text-lg xl:text-xl text-center">
           Get up-to-date vehicle information directly from NMVTIS and government
           agencies across the U.S., Canada, Australia, New Zealand, and the UK.
         </p>
