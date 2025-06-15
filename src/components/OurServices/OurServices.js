@@ -1,0 +1,93 @@
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { images } from "../../../public/assets/images";
+
+const servicesContent = [
+  {
+    title: "Title History",
+    description:
+      "Includes current and past title records sourced from the National Motor Vehicle Title Information System (NMVTIS). This information helps verify the vehicle’s ownership history, ensuring it has no legal complications or outstanding liens.",
+  },
+  {
+    title: "Warranty Coverage",
+    description:
+      "Details the manufacturer's warranty, including drivetrain and safety system coverage. It also provides insights into the remaining coverage period and what parts of the vehicle are still under warranty, offering peace of mind for potential buyers.",
+  },
+  {
+    title: "Inspection Records",
+    description:
+      "Covers inspection dates, safety checks, driver issues, hazardous materials violations, and other relevant details. These records ensure the vehicle is safe to drive and complies with federal and state regulations, providing a clear history of its roadworthiness.",
+  },
+  {
+    title: "Vehicle Registration History",
+    description:
+      "Displays current registration status and previous registration events with dates. This helps track the vehicle's legal standing and location history and assists in verifying its authenticity.",
+  },
+  {
+    title: "Vehicle Valuation Insights",
+    description:
+      "Provides trusted valuation data for cars and trucks, useful for trade-ins or sales. This information considers factors like make, model, mileage, condition, and market trends to give a fair market value, aiding both sellers and buyers in pricing negotiations.",
+  },
+  {
+    title: "Stolen Vehicle Status",
+    description:
+      "Highlights vehicles reported stolen, with information on their recovery status. This allows potential buyers to verify that the vehicle has not been involved in criminal activities and confirms its legal ownership before making a purchase.",
+  },
+];
+
+const OurServices = () => {
+  return (
+    <div className="w-full px-12">
+      <p className="text-center font-ancola text-primary text-2xl lg:text-3xl xl:text-5xl mb-9">
+        Our Services
+      </p>
+
+      <div className="w-full">
+        <Carousel
+          opts={{
+            align: "start",
+          }}
+          className="w-full"
+        >
+          <CarouselContent>
+            {servicesContent.map((service, index) => (
+              <CarouselItem key={index} className="md:basis-2/3 lg:basis-1/3">
+                <ServiceItem
+                  ImgPath={images.serviceItems[index]}
+                  title={service.title}
+                  description={service.description}
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
+      </div>
+    </div>
+  );
+};
+
+const ServiceItem = ({ ImgPath, title, description }) => {
+  return (
+    <div className="h-[80dvh] flex flex-col items-start justify-around gap-3 2xl:gap-0 bg-primary rounded-xl shadow-lg shadow-gray-400 px-3 py-6">
+      <div className="w-full h-[40dvh]">
+        <img
+          src={ImgPath}
+          alt="Service Image"
+          className="w-full h-full object-cover rounded-xl"
+        />
+      </div>
+
+      <p className="font-hora font-bold text-2xl mt-3">{title}</p>
+      <p className="text-white sm:text-lg">{description}</p>
+    </div>
+  );
+};
+
+export default OurServices;
