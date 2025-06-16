@@ -101,6 +101,8 @@ const TestimonialCard = ({ name, review }) => (
     <Quote className="rotate-180 text-black" size={16} />
     <p className="font-hora text-center text-sm">&quot;{review}&quot;</p>
     <Quote className="rotate-360 ml-auto text-black" size={16} />
-    <p className="font-ancola text-white font-semibold">{name}</p>
+    <p className="font-ancola text-white tracking-widest font-semibold">
+      {name}
+    </p>
   </div>
 );
