@@ -33,7 +33,7 @@ export const FactsAndFigures = () => {
           ))}
         </div>
       </div>
-      <div className="max-sm:h-[20dvh] max-sm:mt-12 flex items-center justify-center">
+      <div className="max-sm:h-[20vh] max-sm:mt-12 flex items-center justify-center">
         <img src={images.carImage} alt="Facts and Figures" />
       </div>
     </div>
