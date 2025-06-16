@@ -99,7 +99,7 @@ export const Testimonials = () => {
 const TestimonialCard = ({ name, review }) => (
   <div className="h-56 w-80 px-6 p-6 flex flex-col items-start justify-around gap-3 bg-primary rounded-xl text-white">
     <Quote className="rotate-180 text-black" size={16} />
-    <p className="font-hora text-center text-sm">"{review}"</p>
+    <p className="font-hora text-center text-sm">&quot;{review}&quot;</p>
     <Quote className="rotate-360 ml-auto text-black" size={16} />
     <p className="font-ancola text-white font-semibold">{name}</p>
   </div>
