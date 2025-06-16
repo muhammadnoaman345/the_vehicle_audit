@@ -53,12 +53,12 @@ export default function ContactUs() {
     <div className="w-full sm:grid sm:grid-cols-2 sm:grid-rows-1 sm:gap-3 bg-primary px-3 pb-6 sm:p-6 rounded-xl overflow-hidden">
       <div className="flex flex-col items-center justify-center max-sm:py-12">
         <p className="text-center font-ancola text-white text-2xl lg:text-3xl xl:text-5xl mb-6">
-          Let's get in touch!
+          Let&apos;s get in touch!
         </p>
         <p className="text-center font-hora sm:text-lg text-white">
-          Got Questions? We've Got Answers! Here are the most common questions
-          we get about our services, designed to help you make the best choices
-          with complete confidence.
+          Got Questions? We&apos;ve Got Answers! Here are the most common
+          questions we get about our services, designed to help you make the
+          best choices with complete confidence.
         </p>
       </div>
       <div className="max-sm:row-span-2">

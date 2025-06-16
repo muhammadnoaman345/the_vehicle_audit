@@ -45,9 +45,9 @@ export default function Faq() {
         Frequently Asked Questions
       </p>
       <p className="text-center font-hora sm:text-lg">
-        Got Questions? We've Got Answers! Here are the most common questions we
-        get about our services, designed to help you make the best choices with
-        complete confidence.
+        Got Questions? We&apos;ve Got Answers! Here are the most common
+        questions we get about our services, designed to help you make the best
+        choices with complete confidence.
       </p>
 
       <div className="w-full sm:px-[10dvw] mt-6">
