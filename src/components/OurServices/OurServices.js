@@ -12,31 +12,37 @@ const servicesContent = [
     title: "Title History",
     description:
       "Includes current and past title records sourced from the National Motor Vehicle Title Information System (NMVTIS). This information helps verify the vehicle’s ownership history, ensuring it has no legal complications or outstanding liens.",
+    imgPath: images.serviceItems[0],
   },
   {
     title: "Warranty Coverage",
     description:
       "Details the manufacturer's warranty, including drivetrain and safety system coverage. It also provides insights into the remaining coverage period and what parts of the vehicle are still under warranty, offering peace of mind for potential buyers.",
+    imgPath: images.serviceItems[1],
   },
   {
     title: "Inspection Records",
     description:
       "Covers inspection dates, safety checks, driver issues, hazardous materials violations, and other relevant details. These records ensure the vehicle is safe to drive and complies with federal and state regulations, providing a clear history of its roadworthiness.",
+    imgPath: images.serviceItems[3],
   },
   {
     title: "Vehicle Registration History",
     description:
       "Displays current registration status and previous registration events with dates. This helps track the vehicle's legal standing and location history and assists in verifying its authenticity.",
+    imgPath: images.serviceItems[4],
   },
   {
     title: "Vehicle Valuation Insights",
     description:
       "Provides trusted valuation data for cars and trucks, useful for trade-ins or sales. This information considers factors like make, model, mileage, condition, and market trends to give a fair market value, aiding both sellers and buyers in pricing negotiations.",
+    imgPath: images.serviceItems[5],
   },
   {
     title: "Stolen Vehicle Status",
     description:
       "Highlights vehicles reported stolen, with information on their recovery status. This allows potential buyers to verify that the vehicle has not been involved in criminal activities and confirms its legal ownership before making a purchase.",
+    imgPath: images.serviceItems[2],
   },
 ];
 
@@ -61,7 +67,7 @@ const OurServices = () => {
                 className="md:basis-2/3 lg:basis-1/3 md:mx-3"
               >
                 <ServiceItem
-                  ImgPath={images.serviceItems[index]}
+                  ImgPath={service.imgPath}
                   title={service.title}
                   description={service.description}
                 />

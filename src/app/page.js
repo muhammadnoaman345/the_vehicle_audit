@@ -1,6 +1,8 @@
 import { FactsAndFigures } from "@/components/FactsAndFigures/FactsAndFigures";
 import Hero from "@/components/Hero/Hero";
 import OurServices from "@/components/OurServices/OurServices";
+import { Pricing } from "@/components/Pricing/Pricing";
+import { Testimonials } from "@/components/Testimonials/Testimonials";
 import WhyChooseUs from "@/components/WhyChooseUs/WhyChooseUs";
 
 function Home() {
@@ -11,6 +13,8 @@ function Home() {
       <WhyChooseUs />
       <OurServices />
       <FactsAndFigures />
+      <Pricing />
+      <Testimonials />
     </div>
   );
 }
