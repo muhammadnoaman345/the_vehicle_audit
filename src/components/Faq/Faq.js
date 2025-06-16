@@ -50,9 +50,10 @@ export default function Faq() {
         complete confidence.
       </p>
 
-      <div className="w-full sm:px-[10dvw] mt-3">
+      <div className="w-full sm:px-[10dvw] mt-6">
         {faqs.map((faq, index) => (
           <Accordion
+            key={index}
             type="single"
             collapsible
             className="border-2 border-primary rounded-lg px-6 my-3"
