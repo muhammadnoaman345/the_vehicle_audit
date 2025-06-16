@@ -1,3 +1,4 @@
+import ContactUs from "@/components/ContactUs/ContactUs";
 import { FactsAndFigures } from "@/components/FactsAndFigures/FactsAndFigures";
 import Faq from "@/components/Faq/Faq";
 import Hero from "@/components/Hero/Hero";
@@ -17,6 +18,7 @@ function Home() {
       <Pricing />
       <Testimonials />
       <Faq />
+      <ContactUs />
     </div>
   );
 }
