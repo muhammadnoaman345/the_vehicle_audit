@@ -84,7 +84,7 @@ const OurServices = () => {
 
 const ServiceItem = ({ ImgPath, title, description }) => {
   return (
-    <div className="h-[65dvh] sm:h-[80dvh] flex flex-col items-start justify-around gap-3 2xl:gap-0 bg-primary rounded-xl shadow-xl shadow-gray-400 px-3 py-3 sm:py-6">
+    <div className="h-[65dvh] sm:h-[90dvh] flex flex-col items-start justify-around gap-3 2xl:gap-0 bg-primary rounded-xl shadow-xl shadow-gray-400 px-3 py-3 sm:py-6">
       <div className="w-full h-[40dvh]">
         <img
           src={ImgPath}
@@ -94,7 +94,7 @@ const ServiceItem = ({ ImgPath, title, description }) => {
       </div>
 
       <p className="font-hora font-bold text-2xl mt-3">{title}</p>
-      <p className="text-white text-sm sm:text-lg">{description}</p>
+      <p className="text-white text-sm xl:text-lg">{description}</p>
     </div>
   );
 };
