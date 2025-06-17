@@ -15,9 +15,18 @@ const serviceItems = [
   "/assets/images/service-item-6.jpg",
 ];
 
+const flags = [
+  { country: "Scotland", path: "/assets/images/flag-scotland.png" },
+  { country: "Canada", path: "/assets/images/flag-canada.png" },
+  { country: "Australia", path: "/assets/images/flag-australia.png" },
+  { country: "Newzealand", path: "/assets/images/flag-newzealand.png" },
+  { country: "Iceland", path: "/assets/images/flag-iceland.png" },
+];
+
 export const images = {
   heroBackground: "/assets/images/hero-car.jpg",
   heroItems,
   serviceItems,
   carImage: "/assets/images/car.png",
+  flags,
 };

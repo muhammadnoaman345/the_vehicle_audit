@@ -1,3 +1,4 @@
+"use client";
 import ContactUs from "@/components/ContactUs/ContactUs";
 import { FactsAndFigures } from "@/components/FactsAndFigures/FactsAndFigures";
 import Faq from "@/components/Faq/Faq";

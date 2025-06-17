@@ -1,3 +1,4 @@
+import { motion } from "motion/react";
 import {
   Accordion,
   AccordionContent,
@@ -40,7 +41,13 @@ const faqs = [
 
 export default function Faq() {
   return (
-    <div className="w-full">
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={true}
+      transition={{ duration: 0.8 }}
+      className="w-full"
+    >
       <p className="text-center font-ancola text-primary text-2xl lg:text-3xl xl:text-5xl mb-6">
         Frequently Asked Questions
       </p>
@@ -69,6 +76,6 @@ export default function Faq() {
           </Accordion>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 }

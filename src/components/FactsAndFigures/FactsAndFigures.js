@@ -1,6 +1,8 @@
 import React from "react";
+import { motion } from "motion/react";
 import { images } from "../../../public/assets/images";
 import { Handshake, Ribbon, ShieldHalf, SmilePlus } from "lucide-react";
+import { NumberTicker } from "../magicui/number-ticker";
 
 const statistics = [
   { figure: "200K+", entity: "Happy Customers", icon: <SmilePlus size={36} /> },
@@ -12,7 +14,13 @@ const statistics = [
 export const FactsAndFigures = () => {
   return (
     <div className="w-full grid max-sm:grid-rows-2 sm:grid-cols-2">
-      <div className="max-sm:row-span-3 flex flex-col gap-6 sm:pl-9">
+      <motion.div
+        initial={{ opacity: 0, x: -200 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="max-sm:row-span-3 flex flex-col gap-6 sm:pl-9"
+      >
         <p className="max-sm:text-center font-ancola text-primary text-2xl lg:text-3xl xl:text-5xl">
           Verified Vehicle Data Insights
         </p>
@@ -32,10 +40,16 @@ export const FactsAndFigures = () => {
             />
           ))}
         </div>
-      </div>
-      <div className="max-sm:h-[20vh] max-sm:mt-12 flex items-center justify-center">
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, x: 200 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="max-sm:h-[20vh] max-sm:mt-12 flex items-center justify-center"
+      >
         <img src={images.carImage} alt="Facts and Figures" />
-      </div>
+      </motion.div>
     </div>
   );
 };
@@ -44,7 +58,10 @@ const Item = ({ figure, entity, icon }) => {
   return (
     <div className="max-sm:flex flex-col items-center justify-centerrounded-lg sm:py-3 sm:px-3">
       <div className="text-primary mb-2">{icon}</div>
-      <p className="font-hora font-bold text-xl md:text-2xl">{figure}</p>
+      <NumberTicker
+        value={figure}
+        className="font-hora font-bold text-xl md:text-2xl"
+      />
       <p className="text-sm sm:text-lg">{entity}</p>
     </div>
   );

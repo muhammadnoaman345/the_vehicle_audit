@@ -1,5 +1,5 @@
 "use client";
-
+import { motion } from "motion/react";
 import { Quote } from "lucide-react";
 import { Marquee } from "../magicui/marquee";
 
@@ -62,7 +62,13 @@ const clientReviews = {
 
 export const Testimonials = () => {
   return (
-    <div className="w-full">
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={true}
+      transition={{ duration: 0.8 }}
+      className="w-full"
+    >
       <p className="text-center font-ancola text-primary text-2xl lg:text-3xl xl:text-5xl mb-3">
         Testimonials
       </p>
@@ -92,7 +98,7 @@ export const Testimonials = () => {
         <div className="pointer-events-none absolute inset-y-0 left-0 w-4 bg-gradient-to-r from-background"></div>
         <div className="pointer-events-none absolute inset-y-0 right-0 w-4 bg-gradient-to-l from-background"></div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

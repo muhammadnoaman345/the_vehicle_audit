@@ -1,5 +1,5 @@
 "use client";
-
+import { motion } from "motion/react";
 import { useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { images } from "../../../public/assets/images";
@@ -9,7 +9,12 @@ const Hero = () => {
   const [searchEntity, setSearchEntity] = useState(1);
 
   return (
-    <section className="w-full flex flex-col items-center justify-between gap-6 overflow-hidden">
+    <motion.section
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1 }}
+      className="w-full flex flex-col items-center justify-between gap-6 overflow-hidden"
+    >
       <div className="w-full flex flex-col items-center justify-center gap-6 max-sm:px-3 lg:pl-4 xl:pl-12 py-6 relative rounded-xl overflow-hidden">
         {/* Hero Content */}
         <div className="z-10 w-full sm:w-1/2 flex flex-col items-center justify-center gap-6 py-3 bg-white/85 bg-opacity-50 rounded-xl">
@@ -84,7 +89,7 @@ const Hero = () => {
           />
         ))}
       </div>
-    </section>
+    </motion.section>
   );
 };
 

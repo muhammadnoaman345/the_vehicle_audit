@@ -1,3 +1,4 @@
+import { motion } from "motion/react";
 import { CircleArrowRight, CircleCheckBig } from "lucide-react";
 
 const benefits = [
@@ -10,7 +11,13 @@ const benefits = [
 export default function WhyChooseUs() {
   return (
     <section className="w-full flex max-sm:flex-col items-center justify-between sm:justify-center">
-      <div className="h-1/2 sm:h-full w-full sm:w-1/2 sm:px-16">
+      <motion.div
+        initial={{ opacity: 0, x: -200 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="h-1/2 sm:h-full w-full sm:w-1/2 sm:px-16"
+      >
         <div className="h-full w-full py-16 bg-primary rounded-xl flex flex-col items-center justify-center gap-3 sm:gap-6 text-white font-ancola text-2xl sm:text-4xl lg:text-5xl xl:text-6xl tracking-wider">
           <p>Why</p>
           <p>Choose</p>
@@ -23,8 +30,14 @@ export default function WhyChooseUs() {
             Us
           </p>
         </div>
-      </div>
-      <div className="h-1/2 sm:h-full w-full sm:w-1/2 flex flex-col items-center justify-center">
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, x: 200 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="h-1/2 sm:h-full w-full sm:w-1/2 flex flex-col items-center justify-center"
+      >
         <p className="max-sm:mt-6 font-hora font-semibold text-lg xl:text-xl text-center">
           Get up-to-date vehicle information directly from NMVTIS and government
           agencies across the U.S., Canada, Australia, New Zealand, and the UK.
@@ -34,7 +47,7 @@ export default function WhyChooseUs() {
             <BenefitItem item={item} key={item} />
           ))}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

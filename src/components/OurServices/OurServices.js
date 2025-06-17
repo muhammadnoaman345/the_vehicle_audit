@@ -1,3 +1,4 @@
+import { motion } from "motion/react";
 import {
   Carousel,
   CarouselContent,
@@ -6,6 +7,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { images } from "../../../public/assets/images";
+import { Marquee } from "../magicui/marquee";
 
 const servicesContent = [
   {
@@ -48,12 +50,18 @@ const servicesContent = [
 
 const OurServices = () => {
   return (
-    <div className="w-full md:px-12">
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1 }}
+      className="w-full md:px-12"
+    >
       <p className="text-center font-ancola text-primary text-2xl lg:text-3xl xl:text-5xl mb-9">
         Our Services
       </p>
 
-      <div className="w-full">
+      {/* Services Cards */}
+      <div className="w-full mb-20 sm:mb-40">
         <Carousel
           opts={{
             align: "start",
@@ -78,7 +86,21 @@ const OurServices = () => {
           <CarouselNext />
         </Carousel>
       </div>
-    </div>
+
+      {/* Flags Animation */}
+      <div className="w-full">
+        <p className="text-center font-ancola text-primary text-2xl lg:text-3xl xl:text-5xl mb-16">
+          We Provide Services In
+        </p>
+        <div className="w-full flex items-center justify-center">
+          <Marquee pauseOnHover className="[--duration:20s] w-full">
+            {images.flags.map((data, index) => (
+              <FlagItem key={index} country={data.country} path={data.path} />
+            ))}
+          </Marquee>
+        </div>
+      </div>
+    </motion.div>
   );
 };
 
@@ -95,6 +117,17 @@ const ServiceItem = ({ ImgPath, title, description }) => {
 
       <p className="font-hora font-bold text-2xl mt-3">{title}</p>
       <p className="text-white text-sm xl:text-lg">{description}</p>
+    </div>
+  );
+};
+
+const FlagItem = ({ country, path }) => {
+  return (
+    <div className="w-32 xl:w-40 mx-4 sm:mx-12 xl:mx-20">
+      <img className="h-32 xl:h-40 w-full rounded-full mb-3" src={path} />
+      <p className="text-center font-hora font-bold text-primary text-lg">
+        {country}
+      </p>
     </div>
   );
 };

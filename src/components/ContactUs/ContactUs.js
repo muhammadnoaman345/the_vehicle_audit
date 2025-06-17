@@ -1,4 +1,5 @@
 "use client";
+import { motion } from "motion/react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -50,7 +51,13 @@ export default function ContactUs() {
   };
 
   return (
-    <div className="w-full sm:grid sm:grid-cols-2 sm:grid-rows-1 sm:gap-3 bg-primary px-3 pb-6 sm:p-6 rounded-xl overflow-hidden">
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={true}
+      transition={{ duration: 0.8 }}
+      className="w-full sm:grid sm:grid-cols-2 sm:grid-rows-1 sm:gap-3 bg-primary px-3 pb-6 sm:p-6 rounded-xl overflow-hidden"
+    >
       <div className="flex flex-col items-center justify-center max-sm:py-12">
         <p className="text-center font-ancola text-white text-2xl lg:text-3xl xl:text-5xl mb-6">
           Let&apos;s get in touch!
@@ -61,7 +68,13 @@ export default function ContactUs() {
           best choices with complete confidence.
         </p>
       </div>
-      <div className="max-sm:row-span-2">
+      <motion.div
+        initial={{ opacity: 0, x: 200 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="max-sm:row-span-2"
+      >
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
@@ -148,7 +161,7 @@ export default function ContactUs() {
             </button>
           </form>
         </Form>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

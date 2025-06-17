@@ -1,3 +1,4 @@
+import { motion } from "motion/react";
 import { CheckIcon } from "lucide-react";
 
 const pricingPlans = [
@@ -61,14 +62,25 @@ const pricingPlans = [
 export const Pricing = () => {
   return (
     <div className="w-full">
-      <p className="text-center font-ancola text-primary text-2xl lg:text-3xl xl:text-5xl mb-3">
+      <motion.p
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={true}
+        transition={{ duration: 0.8 }}
+        className="text-center font-ancola text-primary text-2xl lg:text-3xl xl:text-5xl mb-3"
+      >
         Pricing
-      </p>
+      </motion.p>
 
-      <p className="text-center font-hora sm:text-lg mb-12">
+      <motion.p
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+        className="text-center font-hora sm:text-lg mb-12"
+      >
         Unlock premium features at competitive prices, offering true value for
         your investment
-      </p>
+      </motion.p>
 
       <div className="w-full grid grid-cols-1 grid-rows-3 sm:grid-cols-3 sm:grid-rows-1 gap-9 sm:gap-3">
         {pricingPlans.map((plan, index) => (
@@ -88,6 +100,7 @@ export const Pricing = () => {
                   ? "Premium Plan"
                   : "Economy Plan",
             }}
+            index={index}
           />
         ))}
       </div>
@@ -95,9 +108,16 @@ export const Pricing = () => {
   );
 };
 
-const PricingCard = ({ tier }) => {
+const PricingCard = ({ tier, index }) => {
+  const xValue = index === 0 ? -200 : index === 1 ? 0 : 200;
+  const yValue = index === 1 && 200;
+
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, x: xValue, y: yValue }}
+      whileInView={{ opacity: 1, x: 0, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8 }}
       className={`
         h-[78vh] sm:h-[98dvh] flex flex-col items-center justify-between rounded-2xl px-6 py-3 xl:p-6 mx-3 relative
         ${
@@ -182,6 +202,6 @@ const PricingCard = ({ tier }) => {
       >
         Choose PLan
       </button>
-    </div>
+    </motion.div>
   );
 };

@@ -1,8 +1,15 @@
+"use client";
 import Link from "next/link";
-
+import { motion } from "motion/react";
 export default function Footer() {
   return (
-    <div className="w-full grid grid-cols-1 grid-rows-3 sm:grid-cols-3 sm:grid-rows-1 max-sm:gap-3 bg-primary mt-16 px-6 py-6">
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={true}
+      transition={{ duration: 0.8 }}
+      className="w-full grid grid-cols-1 grid-rows-3 sm:grid-cols-3 sm:grid-rows-1 max-sm:gap-3 bg-primary mt-16 px-6 py-6"
+    >
       <div className="flex items-center justify-center bg-white rounded-xl max-sm:mb-3">
         <p className="text-primary font-ancola tracking-wider sm:text-xl xl:text-3xl font-thin">
           theVehicle
@@ -34,6 +41,6 @@ export default function Footer() {
           </p>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
