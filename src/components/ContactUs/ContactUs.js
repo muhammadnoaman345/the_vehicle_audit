@@ -65,7 +65,7 @@ export default function ContactUs() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
-            className="space-y-8 bg-white px-6 py-3 rounded-xl"
+            className="space-y-4 sm:space-y-8 bg-white px-6 py-3 rounded-xl"
           >
             <FormField
               control={form.control}
