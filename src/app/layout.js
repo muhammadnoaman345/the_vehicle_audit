@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar/Navbar";
 import "./globals.css";
+import Footer from "@/components/Footer/Footer";
 
 export const metadata = {
   title: "The Vehicle Audit",
@@ -12,6 +13,7 @@ export default function RootLayout({ children }) {
       <body suppressHydrationWarning className="py-3">
         <Navbar />
         {children}
+        <Footer />
       </body>
     </html>
   );
