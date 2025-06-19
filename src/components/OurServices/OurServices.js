@@ -55,7 +55,7 @@ const OurServices = () => {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 1 }}
-      className="w-full md:px-12"
+      className="w-full md:px-12 bg-gray-100 pt-6 rounded-xl"
     >
       <p className="text-center font-ancola text-primary text-2xl lg:text-3xl xl:text-5xl mb-9">
         Our Services
@@ -108,7 +108,7 @@ const OurServices = () => {
 const ServiceItem = ({ ImgPath, title, description }) => {
   return (
     <div
-      className="h-[65dvh] sm:h-[75dvh] flex flex-col items-start justify-around gap-3 2xl:gap-0 rounded-xl px-3 py-3 sm:py-6 mb-4 max-sm:mr-4"
+      className="h-[65dvh] md:h-[90dvh] xl:h-[75dvh] flex flex-col items-start justify-around gap-3 2xl:gap-0 rounded-xl px-3 py-3 sm:py-6 mb-4 max-sm:mr-4"
       style={{ boxShadow: "12px 100px 20px 4px #99a1af" }}
     >
       <div className="w-full h-[40dvh]">
