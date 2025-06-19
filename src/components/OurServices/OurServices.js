@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/carousel";
 import { images } from "../../../public/assets/images";
 import { Marquee } from "../magicui/marquee";
+import { Dot } from "lucide-react";
 
 const servicesContent = [
   {
@@ -106,7 +107,10 @@ const OurServices = () => {
 
 const ServiceItem = ({ ImgPath, title, description }) => {
   return (
-    <div className="h-[65dvh] sm:h-[90dvh] flex flex-col items-start justify-around gap-3 2xl:gap-0 bg-primary rounded-xl shadow-xl shadow-gray-400 px-3 py-3 sm:py-6">
+    <div
+      className="h-[65dvh] sm:h-[75dvh] flex flex-col items-start justify-around gap-3 2xl:gap-0 rounded-xl px-3 py-3 sm:py-6 mb-4 max-sm:mr-4"
+      style={{ boxShadow: "12px 100px 20px 4px #99a1af" }}
+    >
       <div className="w-full h-[40dvh]">
         <img
           src={ImgPath}
@@ -115,8 +119,11 @@ const ServiceItem = ({ ImgPath, title, description }) => {
         />
       </div>
 
-      <p className="font-hora font-bold text-2xl mt-3">{title}</p>
-      <p className="text-white text-sm xl:text-lg">{description}</p>
+      <p className="font-hora font-bold text-2xl mt-3">
+        <span className="text-primary text-3xl mr-2 ">•</span>
+        {title}
+      </p>
+      <p className="text-gray-800 text-sm xl:text-lg px-3">{description}</p>
     </div>
   );
 };
@@ -125,7 +132,7 @@ const FlagItem = ({ country, path }) => {
   return (
     <div className="w-32 xl:w-40 mx-4 sm:mx-12 xl:mx-20">
       <img className="h-32 xl:h-40 w-full rounded-full mb-3" src={path} />
-      <p className="text-center font-hora font-bold text-primary text-lg">
+      <p className="text-center font-hora font-bold text-black text-lg">
         {country}
       </p>
     </div>
