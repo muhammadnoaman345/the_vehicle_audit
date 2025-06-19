@@ -5,10 +5,10 @@ import { Handshake, Ribbon, ShieldHalf, SmilePlus } from "lucide-react";
 import { NumberTicker } from "../magicui/number-ticker";
 
 const statistics = [
-  { figure: "200K+", entity: "Happy Customers", icon: <SmilePlus size={36} /> },
-  { figure: "500k+", entity: "Reports Sold", icon: <ShieldHalf size={36} /> },
-  { figure: "50+", entity: "Years of Expertise", icon: <Ribbon size={36} /> },
-  { figure: "500+", entity: "Active Partners", icon: <Handshake size={36} /> },
+  { figure: 200, entity: "Happy Customers", icon: <SmilePlus size={36} /> },
+  { figure: 500, entity: "Reports Sold", icon: <ShieldHalf size={36} /> },
+  { figure: 5, entity: "Years of Expertise", icon: <Ribbon size={36} /> },
+  { figure: 10, entity: "Active Partners", icon: <Handshake size={36} /> },
 ];
 
 export const FactsAndFigures = () => {
@@ -58,10 +58,10 @@ const Item = ({ figure, entity, icon }) => {
   return (
     <div className="max-sm:flex flex-col items-center justify-centerrounded-lg sm:py-3 sm:px-3">
       <div className="text-primary mb-2">{icon}</div>
-      <NumberTicker
-        value={figure}
-        className="font-hora font-bold text-xl md:text-2xl"
-      />
+      <p className="font-hora font-bold text-xl md:text-2xl">
+        <NumberTicker value={figure} />
+        {figure === 10 ? "+" : "K+"}
+      </p>
       <p className="text-sm sm:text-lg">{entity}</p>
     </div>
   );

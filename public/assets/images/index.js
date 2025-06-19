@@ -20,7 +20,7 @@ const flags = [
   { country: "Canada", path: "/assets/images/flag-canada.png" },
   { country: "Australia", path: "/assets/images/flag-australia.png" },
   { country: "Newzealand", path: "/assets/images/flag-newzealand.png" },
-  { country: "Iceland", path: "/assets/images/flag-iceland.png" },
+  { country: "Ireland", path: "/assets/images/flag-ireland.png" },
 ];
 
 export const images = {
