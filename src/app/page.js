@@ -16,7 +16,7 @@ function Home() {
       <WhyChooseUs />
       <OurServices />
       <FactsAndFigures />
-      {/* <Pricing /> */}
+      <Pricing />
       <Testimonials />
       <Faq />
       <ContactUs />

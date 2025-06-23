@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { CheckIcon } from "lucide-react";
+import { images } from "../../../public/assets/images";
 
 const pricingPlans = [
   {
@@ -69,42 +70,61 @@ export const Pricing = () => {
         transition={{ duration: 0.8 }}
         className="text-center font-ancola text-primary text-2xl lg:text-3xl xl:text-5xl mb-3"
       >
-        Pricing
+        What We Offer
       </motion.p>
 
       <motion.p
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
+        transition={{ duration: 0.8 }}
         className="text-center font-hora sm:text-lg mb-12"
       >
-        Unlock premium features at competitive prices, offering true value for
-        your investment
+        Unlock accurate and trusted data records at competitive prices, offering
+        true value for your investment
       </motion.p>
 
       <div className="w-full grid grid-cols-1 grid-rows-3 sm:grid-cols-3 sm:grid-rows-1 gap-9 sm:gap-3">
-        {pricingPlans.map((plan, index) => (
-          <PricingCard
+        {images.reports.map((report, index) => (
+          <Card
             key={index}
-            tier={{
-              name: `Plan ${index + 1}`,
-              price: plan.price,
-              type: plan.type,
-              period: "per report",
-              features: plan.features,
-              isPopular: index === 1,
-              description:
-                index === 0
-                  ? "Basic Plan"
-                  : index === 1
-                  ? "Premium Plan"
-                  : "Economy Plan",
-            }}
             index={index}
+            type={report.type}
+            path={report.path}
           />
         ))}
       </div>
     </div>
+  );
+};
+
+const Card = ({ index, type, path }) => {
+  const xValue = index === 0 ? -200 : index === 1 ? 0 : 200;
+  const yValue = index === 1 && 200;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: xValue, y: yValue }}
+      whileInView={{ opacity: 1, x: 0, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8 }}
+      className={`
+          flex flex-col items-center justify-between gap-3 sm:gap-6 rounded-2xl px-6 py-3 xl:p-6 mx-3 relative border-2 border-primary bg-white text-primary shadow-lg hover:shadow-xl border-2 border-primary overflow-hidden`}
+    >
+      {index === 0 && (
+        <div className="absolute top-4 sm:top-8 -right-20 sm:-right-16 rotate-45 bg-black text-white py-2 font-medium w-60 text-center">
+          Popular
+        </div>
+      )}
+      <h3
+        className={`text-2xl font-bold font-hora mb-2 text-gray-900 capitalize`}
+      >
+        {type} Report
+      </h3>
+      <img src={path} alt={`${type} Report`} className="w-full h-60" />
+      <button className="w-1/2 text-sm py-2 xl:py-3 rounded-full font-hora cursor-pointer bg-primary text-white hover:bg-primary/90">
+        Order Now
+      </button>
+    </motion.div>
   );
 };
 

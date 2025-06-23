@@ -23,10 +23,17 @@ const flags = [
   { country: "Ireland", path: "/assets/images/flag-ireland.png" },
 ];
 
+const reports = [
+  { type: "car", path: "/assets/images/report-car.jpg" },
+  { type: "bike", path: "/assets/images/report-byke.jpg" },
+  { type: "RV", path: "/assets/images/report-rv.jpg" },
+];
+
 export const images = {
   heroBackground: "/assets/images/hero-car.jpg",
   heroItems,
   serviceItems,
   carImage: "/assets/images/car.png",
   flags,
+  reports,
 };
