@@ -111,7 +111,7 @@ const Card = ({ index, type, path }) => {
           flex flex-col items-center justify-between gap-3 sm:gap-6 rounded-2xl px-6 py-3 xl:p-6 mx-3 relative border-2 border-primary bg-white text-primary shadow-lg hover:shadow-xl border-2 border-primary overflow-hidden`}
     >
       {index === 0 && (
-        <div className="absolute top-4 sm:top-8 -right-20 sm:-right-16 rotate-45 bg-black text-white py-2 font-medium w-60 text-center">
+        <div className="absolute top-3 sm:top-8 -right-24 sm:-right-16 rotate-45 bg-black text-white max-sm:text-sm py-0 sm:py-2 font-medium w-60 text-center">
           Popular
         </div>
       )}
@@ -120,7 +120,7 @@ const Card = ({ index, type, path }) => {
       >
         {type} Report
       </h3>
-      <img src={path} alt={`${type} Report`} className="w-full h-60" />
+      <img src={path} alt={`${type} Report`} className="w-full h-40 sm:h-60" />
       <button className="w-1/2 text-sm py-2 xl:py-3 rounded-full font-hora cursor-pointer bg-primary text-white hover:bg-primary/90">
         Order Now
       </button>
