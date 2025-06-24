@@ -52,7 +52,7 @@ export default function Footer() {
         </p>
       </div>
 
-      <div className="flex flex-col items-center sm:items-start sm:items-center justify-around gap-6 border-2 border-primary rounded-tl-4xl rounded-br-4xl">
+      <div className="flex flex-col items-center items-start sm:items-center justify-around gap-6 border-2 border-primary rounded-tl-4xl rounded-br-4xl">
         <p className="text-white font-ancola tracking-wider sm:text-lg xl:text-2xl font-thin">
           Quick Links
         </p>
@@ -77,7 +77,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="flex flex-col items-center sm:items-start sm:items-center justify-around sm:justify-around gap-6 border-2 border-primary rounded-tl-4xl rounded-br-4xl">
+      <div className="flex flex-col items-center items-start sm:items-center justify-around sm:justify-around gap-6 border-2 border-primary rounded-tl-4xl rounded-br-4xl">
         <p className="text-white font-ancola tracking-wider sm:text-lg xl:text-2xl font-thin">
           Get in touch
         </p>
