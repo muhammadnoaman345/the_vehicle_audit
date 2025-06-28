@@ -15,7 +15,7 @@ function Navbar() {
       <img
         src={images.logo}
         alt="Logo"
-        className="h-16 md:h-16 lg:h-20 xl:h-28 w-16 md:w-16 lg:w-20 xl:w-28"
+        className="h-24 md:h-24 lg:h-28 xl:h-36 w-24 md:w-24 lg:w-28 xl:w-36"
       />
 
       <div className="max-sm:hidden border-2 border-primary rounded-full flex items-center justify-center gap-3 md:gap-6 lg:gap-9 xl:gap-12 px-3 py-2 xl:px-6 xl:py-3 text-primary text-sm xl:text-lg font-hora">
