@@ -36,4 +36,6 @@ export const images = {
   carImage: "/assets/images/car.png",
   flags,
   reports,
+  logo: "/assets/images/logo.png",
+  logo_dark: "/assets/images/logo_dark.png",
 };
