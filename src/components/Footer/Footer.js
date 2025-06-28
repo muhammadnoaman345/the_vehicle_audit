@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { motion } from "motion/react";
 import { ArrowRight, FileSignatureIcon } from "lucide-react";
+import { images } from "../../../public/assets/images";
 
 export default function Footer() {
   return (
@@ -42,10 +43,11 @@ export default function Footer() {
       </div>
 
       <div className="flex flex-col items-center justify-around max-sm:mb-3 border-2 border-primary rounded-tl-4xl rounded-br-4xl px-3 xl:px-6">
-        <p className="text-primary font-ancola tracking-wider sm:text-xl xl:text-3xl font-thin">
-          theVehicle
-          <span className="block ml-6 xl:ml-8">Audit</span>
-        </p>
+        <img
+          src={images.logo_dark}
+          alt="Logo"
+          className="h-24 md:h-24 lg:h-28 xl:h-36 w-24 md:w-24 lg:w-28 xl:w-36"
+        />
         <p className="text-white font-hora text-center text-sm xl:text-base">
           VIN Records History and Title Reports offer valuable insights, a
           dealer-focused service, and exceptional customer support.

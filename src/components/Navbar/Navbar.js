@@ -7,14 +7,16 @@ import {
 } from "@/components/ui/sheet";
 import { AlignRight, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { images } from "../../../public/assets/images";
 
 function Navbar() {
   return (
-    <nav className="w-full flex items-center justify-between mb-16 px-6 py-3">
-      <p className="text-primary font-ancola tracking-wider sm:text-xl xl:text-3xl font-thin">
-        theVehicle
-        <span className="block ml-6 xl:ml-8">Audit</span>
-      </p>
+    <nav className="w-full flex items-center justify-between mb-8 px-6 py-3">
+      <img
+        src={images.logo}
+        alt="Logo"
+        className="h-16 md:h-16 lg:h-20 xl:h-28 w-16 md:w-16 lg:w-20 xl:w-28"
+      />
 
       <div className="max-sm:hidden border-2 border-primary rounded-full flex items-center justify-center gap-3 md:gap-6 lg:gap-9 xl:gap-12 px-3 py-2 xl:px-6 xl:py-3 text-primary text-sm xl:text-lg font-hora">
         <Link href="/">Home</Link>
