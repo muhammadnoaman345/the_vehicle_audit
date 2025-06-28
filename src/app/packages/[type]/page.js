@@ -2,12 +2,13 @@
 
 import { CheckIcon } from "lucide-react";
 import { motion } from "motion/react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 
 const pricingData = {
   car: [
     {
-      plan: "Silver",
+      plan: "silver",
       price: "$39.99",
       perReport: "Per Report",
       features: [
@@ -21,7 +22,7 @@ const pricingData = {
       ],
     },
     {
-      plan: "Gold",
+      plan: "gold",
       price: "$71.95",
       perReport: "Per Report",
       features: [
@@ -42,7 +43,7 @@ const pricingData = {
       ],
     },
     {
-      plan: "Platinum",
+      plan: "platinum",
       price: "$99.99",
       perReport: "Per Report",
       features: [
@@ -67,7 +68,7 @@ const pricingData = {
   ],
   rv: [
     {
-      plan: "Silver",
+      plan: "silver",
       price: "$39.99",
       perReport: "Per Report",
       features: [
@@ -81,7 +82,7 @@ const pricingData = {
       ],
     },
     {
-      plan: "Gold",
+      plan: "gold",
       price: "$71.95",
       perReport: "Per Report",
       features: [
@@ -102,7 +103,7 @@ const pricingData = {
       ],
     },
     {
-      plan: "Platinum",
+      plan: "platinum",
       price: "$99.99",
       perReport: "Per Report",
       features: [
@@ -127,7 +128,7 @@ const pricingData = {
   ],
   bike: [
     {
-      plan: "Silver",
+      plan: "silver",
       price: "$29.99",
       perReport: "Per Report",
       features: [
@@ -141,7 +142,7 @@ const pricingData = {
       ],
     },
     {
-      plan: "Gold",
+      plan: "gold",
       price: "$71.95",
       perReport: "Per Report",
       features: [
@@ -162,7 +163,7 @@ const pricingData = {
       ],
     },
     {
-      plan: "Platinum",
+      plan: "platinum",
       price: "$99.99",
       perReport: "Per Report",
       features: [
@@ -212,14 +213,14 @@ export default function Page() {
 
       <div className="w-full grid grid-cols-1 grid-rows-3 sm:grid-cols-3 sm:grid-rows-1 gap-9 sm:gap-3 mb-24">
         {pricingData[type].map((tier, index) => (
-          <PricingCard key={index} tier={tier} index={index} />
+          <PricingCard key={index} tier={tier} type={type} index={index} />
         ))}
       </div>
     </div>
   );
 }
 
-const PricingCard = ({ tier, index }) => {
+const PricingCard = ({ tier, type, index }) => {
   const xValue = index === 0 ? -200 : index === 1 ? 0 : 200;
   const yValue = index === 1 && 200;
 
@@ -231,7 +232,7 @@ const PricingCard = ({ tier, index }) => {
       transition={{ duration: 0.8 }}
       className="h-full flex flex-col items-center justify-start gap-3 pb-3 rounded-2xl shadow-lg hover:shadow-xl border-2 border-primary overflow-hidden"
     >
-      <h3 className="w-full py-3 text-lg xl:text-2xl text-white text-center font-bold font-hora bg-primary">
+      <h3 className="w-full py-3 capitalize text-lg xl:text-2xl text-white text-center font-bold font-hora bg-primary">
         {tier.plan}
       </h3>
 
@@ -256,9 +257,12 @@ const PricingCard = ({ tier, index }) => {
         </ul>
       </div>
 
-      <button className="w-2/3 text-sm py-2 xl:py-3 rounded-full font-hora cursor-pointer bg-primary text-white hover:bg-primary/90">
+      <Link
+        href={`/search/${type}-${tier.plan}`}
+        className="w-2/3 text-sm py-2 xl:py-3 rounded-full font-hora cursor-pointer bg-primary text-white text-center hover:bg-primary/90"
+      >
         Choose Plan
-      </button>
+      </Link>
     </motion.div>
   );
 };
