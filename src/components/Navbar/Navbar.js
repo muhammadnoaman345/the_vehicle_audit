@@ -11,7 +11,7 @@ import { images } from "../../../public/assets/images";
 
 function Navbar() {
   return (
-    <nav className="w-full flex items-center justify-between mb-8 px-6 py-3">
+    <nav className="w-full flex items-center justify-between mb-8 px-6 pb-3">
       <img
         src={images.logo}
         alt="Logo"

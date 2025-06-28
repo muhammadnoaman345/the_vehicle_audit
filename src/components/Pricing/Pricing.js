@@ -1,64 +1,6 @@
 import { motion } from "motion/react";
-import { CheckIcon } from "lucide-react";
 import { images } from "../../../public/assets/images";
-
-const pricingPlans = [
-  {
-    price: "$39.99",
-    type: "Car Report",
-    features: [
-      "Vehicle Overview",
-      "Market Value",
-      "Vehicle Specifications",
-      "Sales Listing",
-      "Accident Record",
-      "Salvage",
-      "Theft Record",
-    ],
-  },
-  {
-    price: "$39.99",
-    type: "RV Report",
-    features: [
-      "HQ Car Images",
-      "Vehicle Overview",
-      "Market Value",
-      "Vehicle Specifications",
-      "Sales Listing",
-      "Accident Record",
-      "Salvage",
-      "Theft Record",
-      "Title Record",
-      "Impounds",
-      "Exports",
-      "Open Recalls",
-      "Installed Options and Packages",
-      "Active/Expire Warranty",
-    ],
-  },
-  {
-    price: "$29.99",
-    type: "Motorbike Report",
-    features: [
-      "2 Buyers Numbers from our Directory",
-      "Buy One, Get Another Report Free for Lifetime",
-      "HQ Car Images",
-      "Vehicle Overview",
-      "Market Value",
-      "Vehicle Specifications",
-      "Sales Listing",
-      "Accident Record",
-      "Salvage",
-      "Theft Record",
-      "Title Record",
-      "Impounds",
-      "Exports",
-      "Open Recalls",
-      "Installed Options and Packages",
-      "Active/Expire Warranty",
-    ],
-  },
-];
+import Link from "next/link";
 
 export const Pricing = () => {
   return (
@@ -90,6 +32,7 @@ export const Pricing = () => {
             index={index}
             type={report.type}
             path={report.path}
+            url={report.url}
           />
         ))}
       </div>
@@ -97,7 +40,7 @@ export const Pricing = () => {
   );
 };
 
-const Card = ({ index, type, path }) => {
+const Card = ({ index, type, path, url }) => {
   const xValue = index === 0 ? -200 : index === 1 ? 0 : 200;
   const yValue = index === 1 && 200;
 
@@ -121,107 +64,12 @@ const Card = ({ index, type, path }) => {
         {type} Report
       </h3>
       <img src={path} alt={`${type} Report`} className="w-full h-40 sm:h-60" />
-      <button className="w-1/2 text-sm py-2 xl:py-3 rounded-full font-hora cursor-pointer bg-primary text-white hover:bg-primary/90">
+      <Link
+        href={url}
+        className="w-1/2 text-sm py-2 xl:py-3 rounded-full font-hora cursor-pointer bg-primary text-white hover:bg-primary/90 text-center"
+      >
         Order Now
-      </button>
-    </motion.div>
-  );
-};
-
-const PricingCard = ({ tier, index }) => {
-  const xValue = index === 0 ? -200 : index === 1 ? 0 : 200;
-  const yValue = index === 1 && 200;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: xValue, y: yValue }}
-      whileInView={{ opacity: 1, x: 0, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.8 }}
-      className={`
-        h-[78vh] sm:h-[98dvh] flex flex-col items-center justify-between rounded-2xl px-6 py-3 xl:p-6 mx-3 relative
-        ${
-          tier.isPopular
-            ? "bg-primary text-white shadow-2xl animate-glow ring-2 ring-white"
-            : "bg-white text-primary shadow-lg hover:shadow-xl border-2 border-primary"
-        }
-      `}
-    >
-      <div className="absolute -top-5">
-        <span className="bg-white text-primary border-2 border-primary px-3 py-1 rounded-full text-sm font-medium">
-          {tier.type}
-        </span>
-      </div>
-
-      <div className="text-center">
-        <h3
-          className={`text-lg xl:text-2xl font-bold font-hora mb-2 ${
-            tier.isPopular ? "text-white" : "text-gray-900"
-          }`}
-        >
-          {tier.name}
-        </h3>
-        <p
-          className={`text-sm mb-3 font-hora ${
-            tier.isPopular ? "text-white" : "text-black"
-          }`}
-        >
-          {tier.description}
-        </p>
-
-        <div className="mb-3">
-          <span
-            className={`text-3xl xl:text-5xl font-bold font-hora ${
-              tier.isPopular ? "text-white" : "text-gray-900"
-            }`}
-          >
-            {tier.price}
-          </span>
-          <span
-            className={`xl:text-lg font-hora ${
-              tier.isPopular ? "text-white" : "text-black"
-            }`}
-          >
-            {tier.period}
-          </span>
-        </div>
-      </div>
-
-      <ul
-        className={`space-y-1 mb-2 ${
-          tier.name === "Plan 3" && "overflow-y-scroll"
-        }`}
-      >
-        {tier.features.map((feature, index) => (
-          <li
-            key={index}
-            className="flex items-center font-hora text-xs xl:text-base"
-          >
-            <CheckIcon
-              size={16}
-              className={`mr-3 ${
-                tier.isPopular ? "text-white" : "text-primary"
-              }`}
-            />
-            <span className={tier.isPopular ? "text-white" : "text-black"}>
-              {feature}
-            </span>
-          </li>
-        ))}
-      </ul>
-
-      <button
-        className={`
-          w-full text-sm py-2 xl:py-3 rounded-full font-hora cursor-pointer
-          ${
-            tier.isPopular
-              ? "bg-white text-primary shadow-lg"
-              : "bg-primary text-white hover:bg-primary/90"
-          }
-        `}
-      >
-        Choose PLan
-      </button>
+      </Link>
     </motion.div>
   );
 };

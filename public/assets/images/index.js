@@ -24,9 +24,17 @@ const flags = [
 ];
 
 const reports = [
-  { type: "car", path: "/assets/images/report-car.jpg" },
-  { type: "bike", path: "/assets/images/report-byke.jpg" },
-  { type: "RV", path: "/assets/images/report-rv.jpg" },
+  {
+    type: "car",
+    path: "/assets/images/report-car.jpg",
+    url: "/packages/car",
+  },
+  { type: "RV", path: "/assets/images/report-rv.jpg", url: "/packages/rv" },
+  {
+    type: "bike",
+    path: "/assets/images/report-byke.jpg",
+    url: "/packages/bike",
+  },
 ];
 
 export const images = {
