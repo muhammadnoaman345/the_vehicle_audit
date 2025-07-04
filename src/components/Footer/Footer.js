@@ -66,15 +66,31 @@ export default function Footer() {
           </div>
           <div className="flex gap-3">
             <ArrowRight className="text-primary" />
-            <Link href="/about">About Us</Link>
+            <Link href="/#about-us">About Us</Link>
           </div>
           <div className="flex gap-3">
             <ArrowRight className="text-primary" />
-            <Link href="/pricing">Pricing</Link>
+            <Link href="/#our-services">Our Services</Link>
           </div>
           <div className="flex gap-3">
             <ArrowRight className="text-primary" />
-            <Link href="/contact">Contact Us</Link>
+            <Link href="/#pricing">Pricing</Link>
+          </div>
+          <div className="flex gap-3">
+            <ArrowRight className="text-primary" />
+            <Link href="/#testimonials">Testimonials</Link>
+          </div>
+          <div className="flex gap-3">
+            <ArrowRight className="text-primary" />
+            <Link href="/#faq">FAQs</Link>
+          </div>
+          <div className="flex gap-3">
+            <ArrowRight className="text-primary" />
+            <Link href="/#contact-us">Contact Us</Link>
+          </div>
+          <div className="flex gap-3">
+            <ArrowRight className="text-primary" />
+            <Link href="/terms-and-conditions">Terms & Conditions</Link>
           </div>
         </div>
       </div>
