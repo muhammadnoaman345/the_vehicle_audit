@@ -10,7 +10,10 @@ const benefits = [
 
 export default function WhyChooseUs() {
   return (
-    <section className="w-full flex max-sm:flex-col items-center justify-between sm:justify-center">
+    <section
+      id="about-us"
+      className="w-full flex max-sm:flex-col items-center justify-between sm:justify-center"
+    >
       <motion.div
         initial={{ opacity: 0, x: -200 }}
         whileInView={{ opacity: 1, x: 0 }}

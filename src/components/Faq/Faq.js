@@ -42,6 +42,7 @@ const faqs = [
 export default function Faq() {
   return (
     <motion.div
+      id="faq"
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={true}

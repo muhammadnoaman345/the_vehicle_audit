@@ -52,6 +52,7 @@ export default function ContactUs() {
 
   return (
     <motion.div
+      id="contact-us"
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={true}

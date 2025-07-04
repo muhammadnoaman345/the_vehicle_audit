@@ -8,12 +8,12 @@ const clientReviews = {
     {
       name: "Sarah Johnson",
       review:
-        "Epic Vin Check has been a game-changer for us. Their detailed vehicle reports helped us make informed decisions quickly. Highly recommended!",
+        "The Vehicle Audit has been a game-changer for us. Their detailed vehicle reports helped us make informed decisions quickly. Highly recommended!",
     },
     {
       name: "Michael Thompson",
       review:
-        "I’ve used several vehicle report services before, but none compare to the accuracy and reliability of Epic Vin Check. They’ve earned a loyal customer!",
+        "I’ve used several vehicle report services before, but none compare to the accuracy and reliability of The Vehicle Audit. They’ve earned a loyal customer!",
     },
     {
       name: "Jessica Williams",
@@ -23,7 +23,7 @@ const clientReviews = {
     {
       name: "David Smith",
       review:
-        "We’ve trusted Epic Vin Check for over a year now, and their insights have never failed us. Excellent customer service and fast, thorough reports!",
+        "We’ve trusted The Vehicle Audit for over a year now, and their insights have never failed us. Excellent customer service and fast, thorough reports!",
     },
     {
       name: "Emily Davis",
@@ -35,12 +35,12 @@ const clientReviews = {
     {
       name: "John Brown",
       review:
-        "Epic Vin Check offers exceptional value for the price. Their reports are comprehensive and easy to understand. It’s the only service I trust!",
+        "The Vehicle Audit offers exceptional value for the price. Their reports are comprehensive and easy to understand. It’s the only service I trust!",
     },
     {
       name: "Linda Garcia",
       review:
-        "The accuracy of the vehicle history reports is unmatched. Epic Vin Check helped us avoid some serious pitfalls with a few used cars we were looking at.",
+        "The accuracy of the vehicle history reports is unmatched. The Vehicle Audit helped us avoid some serious pitfalls with a few used cars we were looking at.",
     },
     {
       name: "William Martinez",
@@ -50,12 +50,12 @@ const clientReviews = {
     {
       name: "Olivia Wilson",
       review:
-        "Epic Vin Check made our car buying experience smooth. The reports were easy to interpret and helped us feel confident in our purchase.",
+        "The Vehicle Audit made our car buying experience smooth. The reports were easy to interpret and helped us feel confident in our purchase.",
     },
     {
       name: "James Moore",
       review:
-        "I’ve been using Epic Vin Check for months now. The insights they provide are essential for making informed decisions. Always a great experience!",
+        "I’ve been using The Vehicle Audit for months now. The insights they provide are essential for making informed decisions. Always a great experience!",
     },
   ],
 };
@@ -63,6 +63,7 @@ const clientReviews = {
 export const Testimonials = () => {
   return (
     <motion.div
+      id="testimonials"
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={true}

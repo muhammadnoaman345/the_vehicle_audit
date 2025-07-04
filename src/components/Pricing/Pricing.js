@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export const Pricing = () => {
   return (
-    <div className="w-full">
+    <div id="pricing" className="w-full">
       <motion.p
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -54,7 +54,7 @@ const Card = ({ index, type, path, url }) => {
           flex flex-col items-center justify-between gap-3 sm:gap-6 rounded-2xl px-6 py-3 xl:p-6 mx-3 relative border-2 border-primary bg-white text-primary shadow-lg hover:shadow-xl border-2 border-primary overflow-hidden`}
     >
       {index === 0 && (
-        <div className="absolute top-3 sm:top-8 -right-24 sm:-right-16 rotate-45 bg-black text-white max-sm:text-sm py-0 sm:py-2 font-medium w-60 text-center">
+        <div className="absolute top-3 xl:top-8 -right-24 sm:-right-20 xl:-right-16 rotate-45 bg-black text-white max-sm:text-sm py-0 sm:py-2 font-medium w-60 text-center">
           Popular
         </div>
       )}
@@ -63,7 +63,7 @@ const Card = ({ index, type, path, url }) => {
       >
         {type} Report
       </h3>
-      <img src={path} alt={`${type} Report`} className="w-full h-40 sm:h-60" />
+      <img src={path} alt={`${type} Report`} className="w-full h-40 xl:h-60" />
       <Link
         href={url}
         className="w-1/2 text-sm py-2 xl:py-3 rounded-full font-hora cursor-pointer bg-primary text-white hover:bg-primary/90 text-center"
