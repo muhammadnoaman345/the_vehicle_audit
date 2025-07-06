@@ -56,16 +56,16 @@ function Navbar() {
           FAQs
         </Link>
         <Link
-          href="/#contact-us"
-          className="transition-transform duration-200 hover:-translate-y-0.5"
-        >
-          Contact Us
-        </Link>
-        <Link
           href="/terms-and-conditions"
           className="transition-transform duration-200 hover:-translate-y-0.5"
         >
           Terms & Conditions
+        </Link>
+        <Link
+          href="/privacy-policy"
+          className="transition-transform duration-200 hover:-translate-y-0.5"
+        >
+          Privacy Policy
         </Link>
       </div>
 
@@ -90,8 +90,8 @@ function Navbar() {
             <Link href="/#pricing">Pricing</Link>
             <Link href="/#testimonials">Testimonials</Link>
             <Link href="/#faq">FAQs</Link>
-            <Link href="/#contact-us">Contact Us</Link>
             <Link href="/terms-and-conditions">Terms & Conditions</Link>
+            <Link href="/privacy-policy">Privacy Policy</Link>
           </div>
 
           <button className="focus:border-0 mx-4 mt-auto mb-12 bg-white text-primary rounded-full px-3 py-2 font-hora flex items-center justify-center gap-1">
