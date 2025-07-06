@@ -3,9 +3,9 @@
 import { CheckIcon } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 
-const pricingData = {
+export const pricingData = {
   car: [
     {
       plan: "silver",
@@ -190,6 +190,9 @@ const pricingData = {
 
 export default function Page() {
   const { type } = useParams();
+  const searchParams = useSearchParams();
+  const val = searchParams.get("val");
+
   return (
     <div className="flex flex-col items-center justify-center gap-16 px-6 xl:mt-24">
       <motion.div
@@ -213,14 +216,20 @@ export default function Page() {
 
       <div className="w-full grid grid-cols-1 grid-rows-3 sm:grid-cols-3 sm:grid-rows-1 gap-9 sm:gap-3 mb-24">
         {pricingData[type].map((tier, index) => (
-          <PricingCard key={index} tier={tier} type={type} index={index} />
+          <PricingCard
+            key={index}
+            tier={tier}
+            type={type}
+            index={index}
+            val={val}
+          />
         ))}
       </div>
     </div>
   );
 }
 
-const PricingCard = ({ tier, type, index }) => {
+const PricingCard = ({ tier, type, index, val }) => {
   const xValue = index === 0 ? -200 : index === 1 ? 0 : 200;
   const yValue = index === 1 && 200;
 
@@ -230,35 +239,37 @@ const PricingCard = ({ tier, type, index }) => {
       whileInView={{ opacity: 1, x: 0, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.8 }}
-      className="h-full flex flex-col items-center justify-start gap-3 pb-3 rounded-2xl shadow-lg hover:shadow-xl border-2 border-primary overflow-hidden"
+      className="max-sm:h-[60vh] h-[90vh] flex flex-col items-center justify-between pb-3 rounded-2xl shadow-lg hover:shadow-xl border-2 border-primary overflow-hidden"
     >
       <h3 className="w-full py-3 capitalize text-lg xl:text-2xl text-white text-center font-bold font-hora bg-primary">
         {tier.plan}
       </h3>
 
-      <div className="w-full flex flex-col items-center justify-start gap-6 flex-grow">
-        <div>
-          <span className="text-2xl xl:text-3xl font-bold font-hora text-gray-900">
-            {tier.price}
-          </span>
-          <span className="xl:text-lg font-hora text-black"> per report</span>
-        </div>
-
-        <ul className="space-y-1">
-          {tier.features.map((feature, index) => (
-            <li
-              key={index}
-              className="flex items-center font-hora text-xs xl:text-base"
-            >
-              <CheckIcon size={16} className="mr-3 text-primary" />
-              <span className="text-black">{feature}</span>
-            </li>
-          ))}
-        </ul>
+      <div>
+        <span className="text-2xl xl:text-3xl font-bold font-hora text-gray-900">
+          {tier.price}
+        </span>
+        <span className="xl:text-lg font-hora text-black"> per report</span>
       </div>
 
+      <ul className="max-sm:h-2/5 h-3/5 my-3 space-y-1">
+        {tier.features.map((feature, index) => (
+          <li
+            key={index}
+            className="flex items-center font-hora text-xs xl:text-base"
+          >
+            <CheckIcon size={16} className="mr-3 text-primary" />
+            <span className="text-black">{feature}</span>
+          </li>
+        ))}
+      </ul>
+
       <Link
-        href={`/search/${type}-${tier.plan}`}
+        href={
+          val
+            ? `/checkout?package=${type}-${tier.plan}&val=${val}`
+            : `/search?package=${type}-${tier.plan}`
+        }
         className="w-2/3 text-sm py-2 xl:py-3 rounded-full font-hora cursor-pointer bg-primary text-white text-center hover:bg-primary/90"
       >
         Choose Plan
