@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import {
   AlertTriangle,
   ArrowRight,
@@ -8,6 +8,7 @@ import {
   DollarSign,
   Gauge,
   History,
+  Loader2,
   NotebookPen,
   Settings,
   ShieldAlert,
@@ -16,7 +17,7 @@ import {
 } from "lucide-react";
 import { Testimonials } from "@/components/Testimonials/Testimonials";
 import { motion } from "motion/react";
-import { redirect, useParams, useSearchParams } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 
 const metrics = [
   {
@@ -66,7 +67,25 @@ const metrics = [
   },
 ];
 
-export default function Page() {
+function Loading() {
+  return (
+    <motion.div
+      className="flex flex-col items-center justify-center gap-16 px-6 xl:mt-24"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }} // Fade-in effect
+    >
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 1, loop: Infinity, ease: "linear" }}
+      >
+        <Loader2 className="w-12 h-12 text-primary" />{" "}
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function Page() {
   const [searchEntity, setSearchEntity] = useState(1);
   const [searchValue, setSearchValue] = useState("");
   const [progress, setProgress] = useState(0);
@@ -263,5 +282,13 @@ export default function Page() {
 
       <Testimonials />
     </div>
+  );
+}
+
+export default function PageWithSuspense() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <Page />
+    </Suspense>
   );
 }

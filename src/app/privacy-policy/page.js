@@ -5,8 +5,8 @@ import { motion } from "motion/react";
 
 const privacyPolicy = [
   {
-    heading: "Effective Date",
-    content: "June 25, 2025",
+    heading: "Privacy Policy",
+    content: "Effective Date: June 25, 2025",
   },
   {
     heading: "Introduction",
