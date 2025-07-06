@@ -4,9 +4,18 @@ import { motion } from "motion/react";
 import { useSearchParams } from "next/navigation";
 import { images } from "../../../public/assets/images";
 import { pricingData } from "../packages/[type]/page";
-import { Check } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
+import { Suspense } from "react";
 
-export default function Page() {
+export default function PageWithSuspense() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <Page />
+    </Suspense>
+  );
+}
+
+function Page() {
   const searchParams = useSearchParams();
   const val = searchParams.get("val");
   const packageName = searchParams.get("package");
@@ -90,5 +99,23 @@ export default function Page() {
         </div>
       </div>
     </div>
+  );
+}
+
+function Loading() {
+  return (
+    <motion.div
+      className="flex flex-col items-center justify-center gap-16 px-6 xl:mt-24"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }} // Fade-in effect
+    >
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 1, loop: Infinity, ease: "linear" }}
+      >
+        <Loader2 className="w-12 h-12 text-primary" />{" "}
+      </motion.div>
+    </motion.div>
   );
 }
