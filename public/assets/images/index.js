@@ -37,6 +37,12 @@ const reports = [
   },
 ];
 
+const blurImgs = {
+  car: "/assets/images/car-blur.jpg",
+  bike: "/assets/images/bike-blur.jpg",
+  rv: "/assets/images/rv-blur.png",
+};
+
 export const images = {
   heroBackground: "/assets/images/hero-car.jpg",
   heroItems,
@@ -46,4 +52,5 @@ export const images = {
   reports,
   logo: "/assets/images/logo.png",
   logo_dark: "/assets/images/logo_dark.png",
+  blurImgs,
 };
