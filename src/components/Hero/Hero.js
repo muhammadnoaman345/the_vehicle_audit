@@ -4,9 +4,25 @@ import { useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { images } from "../../../public/assets/images";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 
 const Hero = () => {
   const [searchEntity, setSearchEntity] = useState(1);
+  const [searchValue, setSearchValue] = useState("");
+  const [error, setError] = useState(false);
+
+  const handleClick = () => {
+    if (
+      !searchValue ||
+      searchValue.trim() === "" ||
+      (searchEntity === 1 && searchValue.length !== 17) ||
+      (searchEntity === 2 && searchValue.length !== 7)
+    ) {
+      setError(true);
+      return;
+    }
+    redirect(`/search/?val=${searchValue}`);
+  };
 
   return (
     <motion.section
@@ -55,16 +71,28 @@ const Hero = () => {
                 </p>
               </div>
               <input
-                type="number"
-                className="w-full border-2 border-primary rounded-lg p-2 xl:p-3 placeholder:font-hora xl:text-lg placeholder:text-black text-black"
+                value={searchValue}
+                maxLength={searchEntity === 1 ? 17 : 7}
+                onChange={(e) => setSearchValue(e.target.value)}
                 placeholder={
                   searchEntity === 1
                     ? "Enter VIN number"
                     : "Enter License Plate Number"
                 }
+                className="w-full border-2 border-primary rounded-lg p-2 xl:p-3 placeholder:font-hora xl:text-lg placeholder:text-black 
+                text-black"
               />
+              {error && (
+                <p className="text-red-500 text-xs xl:text-sm mt-2">
+                  Please enter a valid
+                  {searchEntity === 1 ? " VIN" : " license plate"} number.
+                </p>
+              )}
             </div>
-            <button className="flex items-center justify-center mb-[1px] gap-1 xl:gap-3 font-hora bg-gradient-to-br from-primary to-muted px-3 py-2 xl:px-6 xl:py-3 rounded-full text-black sm:text-sm xl:text-lg">
+            <button
+              onClick={handleClick}
+              className="flex items-center justify-center mb-[1px] gap-1 xl:gap-3 font-hora bg-primary px-3 py-2 xl:px-6 xl:py-3 rounded-full text-white sm:text-sm xl:text-lg cursor-pointer"
+            >
               Get report <ArrowRight size={28} />
             </button>
           </div>

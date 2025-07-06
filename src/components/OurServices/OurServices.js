@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/carousel";
 import { images } from "../../../public/assets/images";
 import { Marquee } from "../magicui/marquee";
-import { Dot } from "lucide-react";
 
 const servicesContent = [
   {
