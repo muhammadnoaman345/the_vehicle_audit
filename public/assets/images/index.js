@@ -43,6 +43,30 @@ const blurImgs = {
   rv: "/assets/images/rv-blur.png",
 };
 
+const auditMetrics = [
+  { label: "Accident", path: "/assets/images/accident.png", percentage: 10 },
+  { label: "Values", path: "/assets/images/values.png", percentage: 22 },
+  { label: "Title Record", path: "/assets/images/title.png", percentage: 34 },
+  { label: "Recalls", path: "/assets/images/car-1.png", percentage: 46 },
+  {
+    label: "Problem Checks",
+    path: "/assets/images/engine.png",
+    percentage: 56,
+  },
+  { label: "Specs", path: "/assets/images/settings.png", percentage: 66 },
+  {
+    label: "Sales History",
+    path: "/assets/images/seller.png",
+    percentage: 78,
+  },
+  { label: "Odometer", path: "/assets/images/odometer.png", percentage: 88 },
+  {
+    label: "Salvage Records",
+    path: "/assets/images/land.png",
+    percentage: 100,
+  },
+];
+
 export const images = {
   heroBackground: "/assets/images/hero-car.jpg",
   heroItems,
@@ -53,4 +77,5 @@ export const images = {
   logo: "/assets/images/logo.png",
   logo_dark: "/assets/images/logo_dark.png",
   blurImgs,
+  auditMetrics,
 };
