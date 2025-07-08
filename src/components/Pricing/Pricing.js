@@ -2,8 +2,62 @@ import { motion } from "motion/react";
 import { images } from "../../../public/assets/images";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
+import { Loader2 } from "lucide-react";
 
-export const Pricing = () => {
+function Loading() {
+  return (
+    <motion.div
+      className="flex flex-col items-center justify-center gap-16 px-6 xl:mt-24"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }} // Fade-in effect
+    >
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 1, loop: Infinity, ease: "linear" }}
+      >
+        <Loader2 className="w-12 h-12 text-primary" />{" "}
+      </motion.div>
+    </motion.div>
+  );
+}
+
+const Card = ({ index, type, path, url, val }) => {
+  const xValue = index === 0 ? -200 : index === 1 ? 0 : 200;
+  const yValue = index === 1 && 200;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: xValue, y: yValue }}
+      whileInView={{ opacity: 1, x: 0, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8 }}
+      className={`
+          flex flex-col items-center justify-between gap-3 sm:gap-6 rounded-2xl px-6 py-3 xl:p-6 mx-3 relative border-2 border-primary bg-white text-primary shadow-lg hover:shadow-xl border-2 border-primary overflow-hidden`}
+    >
+      {index === 0 && (
+        <div className="absolute top-3 xl:top-8 -right-24 sm:-right-20 xl:-right-16 rotate-45 bg-black text-white max-sm:text-sm py-0 sm:py-2 font-medium w-60 text-center">
+          Popular
+        </div>
+      )}
+      <h3
+        className={`text-2xl font-bold font-hora mb-2 text-gray-900 capitalize`}
+      >
+        {type} Report
+      </h3>
+      <img src={path} alt={`${type} Report`} className="w-full h-40 xl:h-60" />
+      <Link
+        href={val ? url + `?val=${val}` : url}
+        className="w-1/2 text-sm py-2 xl:py-3 rounded-full font-hora cursor-pointer bg-primary text-white hover:bg-primary/90 text-center"
+      >
+        Order Now
+      </Link>
+    </motion.div>
+  );
+};
+
+const Section = () => {
   const searchParams = useSearchParams();
   const val = searchParams.get("val");
   return (
@@ -44,36 +98,10 @@ export const Pricing = () => {
   );
 };
 
-const Card = ({ index, type, path, url, val }) => {
-  const xValue = index === 0 ? -200 : index === 1 ? 0 : 200;
-  const yValue = index === 1 && 200;
-
+export const Pricing = () => {
   return (
-    <motion.div
-      initial={{ opacity: 0, x: xValue, y: yValue }}
-      whileInView={{ opacity: 1, x: 0, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.8 }}
-      className={`
-          flex flex-col items-center justify-between gap-3 sm:gap-6 rounded-2xl px-6 py-3 xl:p-6 mx-3 relative border-2 border-primary bg-white text-primary shadow-lg hover:shadow-xl border-2 border-primary overflow-hidden`}
-    >
-      {index === 0 && (
-        <div className="absolute top-3 xl:top-8 -right-24 sm:-right-20 xl:-right-16 rotate-45 bg-black text-white max-sm:text-sm py-0 sm:py-2 font-medium w-60 text-center">
-          Popular
-        </div>
-      )}
-      <h3
-        className={`text-2xl font-bold font-hora mb-2 text-gray-900 capitalize`}
-      >
-        {type} Report
-      </h3>
-      <img src={path} alt={`${type} Report`} className="w-full h-40 xl:h-60" />
-      <Link
-        href={val ? url + `?val=${val}` : url}
-        className="w-1/2 text-sm py-2 xl:py-3 rounded-full font-hora cursor-pointer bg-primary text-white hover:bg-primary/90 text-center"
-      >
-        Order Now
-      </Link>
-    </motion.div>
+    <Suspense fallback={<Loading />}>
+      <Section />
+    </Suspense>
   );
 };

@@ -18,54 +18,7 @@ import {
 import { Testimonials } from "@/components/Testimonials/Testimonials";
 import { motion } from "motion/react";
 import { redirect, useSearchParams } from "next/navigation";
-
-const metrics = [
-  {
-    label: "Accident",
-    icon: <Truck className="text-white" size={24} />,
-    percentage: 10,
-  },
-  {
-    label: "Values",
-    icon: <DollarSign className="text-white" size={24} />,
-    percentage: 22,
-  },
-  {
-    label: "Title Record",
-    icon: <NotebookPen className="text-white" size={24} />,
-    percentage: 34,
-  },
-  {
-    label: "Recalls",
-    icon: <AlertTriangle className="text-white" size={24} />,
-    percentage: 46,
-  },
-  {
-    label: "Problem Checks",
-    icon: <ShieldAlert className="text-white" size={24} />,
-    percentage: 56,
-  },
-  {
-    label: "Specs",
-    icon: <Settings className="text-white" size={24} />,
-    percentage: 66,
-  },
-  {
-    label: "Sales History",
-    icon: <History className="text-white" size={24} />,
-    percentage: 78,
-  },
-  {
-    label: "Odometer",
-    icon: <Gauge className="text-white" size={24} />,
-    percentage: 88,
-  },
-  {
-    label: "Salvage Records",
-    icon: <Trash className="text-white" size={24} />,
-    percentage: 100,
-  },
-];
+import { images } from "../../../public/assets/images";
 
 function Loading() {
   return (
@@ -118,8 +71,6 @@ function Page() {
       (searchEntity === 1 && searchValue.length !== 17) ||
       (searchEntity === 2 && searchValue.length >= 5 && searchValue.length <= 7)
     ) {
-      console.log(searchEntity, searchValue);
-
       setError(true);
       setLoading(false);
       return;
@@ -143,15 +94,14 @@ function Page() {
       setProgress((prevProgress) => {
         if (prevProgress >= 100) {
           clearInterval(interval);
-          if (packageName) {
+          setTimeout(() => {
             redirect(`/checkout?package=${packageName}&val=${searchValue}`);
-          } else {
-            redirect(`/packages/car?val=${searchValue}`);
-          }
+          }, 1000);
+          return 100;
         }
         return prevProgress + 2;
       });
-    }, 100);
+    }, 200);
   };
 
   return (
@@ -196,14 +146,16 @@ function Page() {
               <input
                 value={searchValue}
                 maxLength={searchEntity === 1 ? 17 : 7}
-                onChange={(e) => setSearchValue(e.target.value)}
+                onChange={(e) =>
+                  setSearchValue(e.target.value.trim().toUpperCase())
+                }
                 placeholder={
                   searchEntity === 1
                     ? "Enter VIN number"
                     : "Enter License Plate Number"
                 }
                 disabled={loading}
-                className="w-full border-2 border-primary rounded-lg p-2 xl:p-3 placeholder:font-hora xl:text-lg placeholder:text-black placeholder:capitalize text-black uppercase"
+                className="w-full border-2 border-primary rounded-lg p-2 xl:p-3 placeholder:font-hora xl:text-lg placeholder:text-black placeholder:capitalize text-black"
               />
               {error && (
                 <p className="text-red-500 text-xs xl:text-sm mt-2">
@@ -230,7 +182,7 @@ function Page() {
         </div>
       )}
 
-      {loading && (
+      {(loading || progress === 100) && (
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -250,8 +202,8 @@ function Page() {
             <p className="font-hora text-white">{progress}%</p>
           </div>
 
-          <div className="w-full grid grid-cols-2 gap-6 sm:flex sm:items-center sm:justify-center mt-6">
-            {metrics.map((metric, index) => (
+          <div className="w-full grid grid-cols-2 gap-6 xl:gap-9 sm:flex sm:items-center sm:justify-center mt-6 max-sm:px-14">
+            {images.auditMetrics.map((metric, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, scale: 0 }}
@@ -267,11 +219,11 @@ function Page() {
                 }}
                 className={`flex flex-col items-center justify-center gap-2 ${
                   progress >= metric.percentage ? "opacity-100" : "hidden"
-                }`}
+                } ${index === 8 && "col-span-2"}`}
               >
                 <Check className="text-white" size={12} />
-                {metric.icon}
-                <p className="text-white font-hora text-sm xl:text-base">
+                <img src={metric.path} className="h-8 xl:h-12 w-8 xl:w-12" />
+                <p className="text-white font-hora font-semibold xl:text-md text-center">
                   {metric.label}
                 </p>
               </motion.div>

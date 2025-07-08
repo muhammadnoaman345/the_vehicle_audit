@@ -83,7 +83,9 @@ const Hero = () => {
               <input
                 value={searchValue}
                 maxLength={searchEntity === 1 ? 17 : 7}
-                onChange={(e) => setSearchValue(e.target.value.toUpperCase())}
+                onChange={(e) =>
+                  setSearchValue(e.target.value.trim().toUpperCase())
+                }
                 placeholder={
                   searchEntity === 1
                     ? "Enter VIN number"
