@@ -20,17 +20,17 @@ const faqs = [
   {
     question: "What If I Can't Find the Information I Need?",
     answer:
-      "If you can’t find the details you need, our dedicated customer service team is available 24/7 to assist you. You can always reach us at info@getvinspro.com. If our experts are unable to retrieve your report, we guarantee a refund.",
+      "If you can’t find the details you need, our dedicated customer service team is available 24/7 to assist you. You can always reach us at info@thevehicleaudit.com. If our experts are unable to retrieve your report, we guarantee a refund.",
   },
   {
     question: "How Can I Cancel My Account?",
     answer:
-      "Cancelling your account is simple! Just reach out to our friendly customer support team at info@getvinsaudit.com, and we’ll take care of the rest.",
+      "Cancelling your account is simple! Just reach out to our friendly customer support team at info@thevehicleaudit.com, and we’ll take care of the rest.",
   },
   {
     question: "How Many Reports Can I Generate?",
     answer:
-      "With our unlimited search subscription, you can generate as many VIN reports as you need. For extra premium data, we offer additional reports for a small fee. Contact us at info@getvinsaudit.com for more details.",
+      "With our unlimited search subscription, you can generate as many VIN reports as you need. For extra premium data, we offer additional reports for a small fee. Contact us at info@thevehicleaudit.com for more details.",
   },
   {
     question: "Is Your VIN Lookup Service Accurate and Reliable?",

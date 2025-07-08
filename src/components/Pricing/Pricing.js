@@ -1,8 +1,11 @@
 import { motion } from "motion/react";
 import { images } from "../../../public/assets/images";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 export const Pricing = () => {
+  const searchParams = useSearchParams();
+  const val = searchParams.get("val");
   return (
     <div id="pricing" className="w-full">
       <motion.p
@@ -33,6 +36,7 @@ export const Pricing = () => {
             type={report.type}
             path={report.path}
             url={report.url}
+            val={val}
           />
         ))}
       </div>
@@ -40,7 +44,7 @@ export const Pricing = () => {
   );
 };
 
-const Card = ({ index, type, path, url }) => {
+const Card = ({ index, type, path, url, val }) => {
   const xValue = index === 0 ? -200 : index === 1 ? 0 : 200;
   const yValue = index === 1 && 200;
 
@@ -65,7 +69,7 @@ const Card = ({ index, type, path, url }) => {
       </h3>
       <img src={path} alt={`${type} Report`} className="w-full h-40 xl:h-60" />
       <Link
-        href={url}
+        href={val ? url + `?val=${val}` : url}
         className="w-1/2 text-sm py-2 xl:py-3 rounded-full font-hora cursor-pointer bg-primary text-white hover:bg-primary/90 text-center"
       >
         Order Now

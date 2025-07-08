@@ -6,7 +6,7 @@ import { motion } from "motion/react";
 const privacyPolicy = [
   {
     heading: "Privacy Policy",
-    content: "Effective Date: June 25, 2025",
+    content: "Effective Date: June 25, 2018",
   },
   {
     heading: "Introduction",
@@ -112,7 +112,7 @@ const privacyPolicy = [
   {
     heading: "Contact Us",
     content:
-      "If you have any questions about this Privacy Policy or the Services provided by The Vehicle Audit, please contact us via email at privacy@thevehicleaudit.com or by phone at (800) 764-0104.",
+      "If you have any questions about this Privacy Policy or the Services provided by The Vehicle Audit, please contact us via email at info@thevehicleaudit.com or by phone at (800) 764-0104.",
   },
 ];
 

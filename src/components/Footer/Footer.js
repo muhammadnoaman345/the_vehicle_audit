@@ -92,6 +92,10 @@ export default function Footer() {
             <ArrowRight className="text-primary" />
             <Link href="/terms-and-conditions">Terms & Conditions</Link>
           </div>
+          <div className="flex gap-3">
+            <ArrowRight className="text-primary" />
+            <Link href="/privacy-policy">Privacy Policy</Link>
+          </div>
         </div>
       </div>
 

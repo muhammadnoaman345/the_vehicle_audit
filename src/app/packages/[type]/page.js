@@ -10,7 +10,7 @@ export const pricingData = {
   car: [
     {
       plan: "silver",
-      price: "$39.99",
+      price: "$49.99",
       perReport: "Per Report",
       features: [
         "Vehicle Overview",
@@ -24,7 +24,7 @@ export const pricingData = {
     },
     {
       plan: "gold",
-      price: "$71.95",
+      price: "$84.99",
       perReport: "Per Report",
       features: [
         "HQ Car Images",
@@ -45,7 +45,7 @@ export const pricingData = {
     },
     {
       plan: "platinum",
-      price: "$99.99",
+      price: "$109.99",
       perReport: "Per Report",
       features: [
         "2 Buyers Numbers from our Directory",
@@ -70,7 +70,7 @@ export const pricingData = {
   rv: [
     {
       plan: "silver",
-      price: "$39.99",
+      price: "$49.99",
       perReport: "Per Report",
       features: [
         "Vehicle Overview",
@@ -84,7 +84,7 @@ export const pricingData = {
     },
     {
       plan: "gold",
-      price: "$71.95",
+      price: "$84.99",
       perReport: "Per Report",
       features: [
         "HQ Car Images",
@@ -105,7 +105,7 @@ export const pricingData = {
     },
     {
       plan: "platinum",
-      price: "$99.99",
+      price: "$109.99",
       perReport: "Per Report",
       features: [
         "2 Buyers Numbers from our Directory",
@@ -130,7 +130,7 @@ export const pricingData = {
   bike: [
     {
       plan: "silver",
-      price: "$29.99",
+      price: "$49.99",
       perReport: "Per Report",
       features: [
         "Vehicle Overview",
@@ -144,7 +144,7 @@ export const pricingData = {
     },
     {
       plan: "gold",
-      price: "$71.95",
+      price: "$84.99",
       perReport: "Per Report",
       features: [
         "HQ Car Images",
@@ -165,7 +165,7 @@ export const pricingData = {
     },
     {
       plan: "platinum",
-      price: "$99.99",
+      price: "$109.99",
       perReport: "Per Report",
       features: [
         "2 Buyers Numbers from our Directory",
@@ -265,7 +265,7 @@ const PricingCard = ({ tier, type, index, val }) => {
         {tier.features.map((feature, index) => (
           <li
             key={index}
-            className="flex items-center font-hora text-xs xl:text-base"
+            className="flex items-center font-hora text-sm xl:text-base"
           >
             <CheckIcon size={16} className="mr-3 text-primary" />
             <span className="text-black">{feature}</span>
@@ -274,11 +274,7 @@ const PricingCard = ({ tier, type, index, val }) => {
       </ul>
 
       <Link
-        href={
-          val
-            ? `/checkout?package=${type}-${tier.plan}&val=${val}`
-            : `/search?package=${type}-${tier.plan}`
-        }
+        href={`/search?package=${type}-${tier.plan}&val=${val}`}
         className="w-2/3 text-sm py-2 xl:py-3 rounded-full font-hora cursor-pointer bg-primary text-white text-center hover:bg-primary/90"
       >
         Choose Plan

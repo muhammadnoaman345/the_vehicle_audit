@@ -116,7 +116,7 @@ function Page() {
       !searchValue ||
       searchValue.trim() === "" ||
       (searchEntity === 1 && searchValue.length !== 17) ||
-      (searchEntity === 2 && searchValue.length !== 7)
+      (searchEntity === 2 && searchValue.length >= 5 && searchValue.length <= 7)
     ) {
       console.log(searchEntity, searchValue);
 

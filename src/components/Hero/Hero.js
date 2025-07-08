@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { images } from "../../../public/assets/images";
 import Image from "next/image";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const Hero = () => {
   const [searchEntity, setSearchEntity] = useState(1);
@@ -16,12 +16,22 @@ const Hero = () => {
       !searchValue ||
       searchValue.trim() === "" ||
       (searchEntity === 1 && searchValue.length !== 17) ||
-      (searchEntity === 2 && searchValue.length !== 7)
+      (searchEntity === 2 && searchValue.length >= 5 && searchValue.length <= 7)
     ) {
       setError(true);
       return;
     }
-    redirect(`/search/?val=${searchValue}`);
+
+    const url = new URL(window.location.href);
+    url.searchParams.set("val", searchValue);
+    window.history.pushState({}, "", url);
+
+    setTimeout(() => {
+      const section = document.getElementById("pricing");
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 200);
   };
 
   return (
@@ -73,7 +83,7 @@ const Hero = () => {
               <input
                 value={searchValue}
                 maxLength={searchEntity === 1 ? 17 : 7}
-                onChange={(e) => setSearchValue(e.target.value)}
+                onChange={(e) => setSearchValue(e.target.value.toUpperCase())}
                 placeholder={
                   searchEntity === 1
                     ? "Enter VIN number"
