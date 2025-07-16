@@ -1,27 +1,9 @@
 import { motion } from "motion/react";
 import { images } from "../../../public/assets/images";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { Loader2 } from "lucide-react";
-
-function Loading() {
-  return (
-    <motion.div
-      className="flex flex-col items-center justify-center gap-16 px-6 xl:mt-24"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1 }} // Fade-in effect
-    >
-      <motion.div
-        animate={{ rotate: 360 }}
-        transition={{ duration: 1, loop: Infinity, ease: "linear" }}
-      >
-        <Loader2 className="w-12 h-12 text-primary" />{" "}
-      </motion.div>
-    </motion.div>
-  );
-}
+import Link from "next/link";
+import Loading from "../Loading/Loading";
 
 const Card = ({ index, type, path, url, val }) => {
   const xValue = index === 0 ? -200 : index === 1 ? 0 : 200;
