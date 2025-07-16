@@ -87,6 +87,7 @@ const schema = z.object({
 
 function Page({ clientSecret }) {
   const [loadingInd, setLoadingInd] = useState(false);
+  const [stripeError, setStripeError] = useState("");
   const searchParams = useSearchParams();
   const stripe = useStripe();
   const elements = useElements();
@@ -118,19 +119,30 @@ function Page({ clientSecret }) {
   const handleSubmit = async (values) => {
     try {
       setLoadingInd(true);
+
       const docRef = await addDoc(collection(db, "sales"), {
-        values,
+        ...values,
+        paymentStatus: "pending",
         timestamp: new Date(),
       });
 
       const { error: submitError } = await elements.submit();
+      if (submitError) {
+        setStripeError(submitError.message);
+        return;
+      }
+
       const { error } = await stripe.confirmPayment({
         elements,
         clientSecret,
         confirmParams: {
-          return_url: `http://www.localhost:3000/`,
+          return_url: `http://localhost:3000/payment-success?doc-id=${docRef.id}`,
         },
       });
+      if (error) {
+        setStripeError(error.message);
+        return;
+      }
     } catch (e) {
       console.error("Error adding document: ", e);
     } finally {
@@ -375,7 +387,9 @@ function Page({ clientSecret }) {
 
         <div className="z-10 w-full sm:w-1/2 mt-6 px-6">
           <div className="w-full">{clientSecret && <PaymentElement />}</div>
-
+          {stripeError && (
+            <p className="text-sm text-red-500 mt-1 font-hora">{stripeError}</p>
+          )}
           <div className="w-full flex items-center justify-between font-hora lg:text-lg xl:text-2xl mt-6">
             <p className="text-primary">Report:</p>
             <p className="capitalize">{name + " " + type} report</p>
