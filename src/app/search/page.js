@@ -1,46 +1,17 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
-import {
-  AlertTriangle,
-  ArrowRight,
-  Check,
-  DollarSign,
-  Gauge,
-  History,
-  Loader2,
-  NotebookPen,
-  Settings,
-  ShieldAlert,
-  Trash,
-  Truck,
-} from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { Testimonials } from "@/components/Testimonials/Testimonials";
 import { motion } from "motion/react";
 import { redirect, useSearchParams } from "next/navigation";
 import { images } from "../../../public/assets/images";
-
-function Loading() {
-  return (
-    <motion.div
-      className="flex flex-col items-center justify-center gap-16 px-6 xl:mt-24"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1 }} // Fade-in effect
-    >
-      <motion.div
-        animate={{ rotate: 360 }}
-        transition={{ duration: 1, loop: Infinity, ease: "linear" }}
-      >
-        <Loader2 className="w-12 h-12 text-primary" />{" "}
-      </motion.div>
-    </motion.div>
-  );
-}
+import Loading from "@/components/Loading/Loading";
 
 function Page() {
   const [searchEntity, setSearchEntity] = useState(1);
   const [searchValue, setSearchValue] = useState("");
+  const [isFp, setFp] = useState(true);
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -49,15 +20,17 @@ function Page() {
   const packageName = searchParams.get("package");
 
   useEffect(() => {
-    console.log("URL search parameter 'val': ", val);
     if (val) {
       if (val.length === 17) {
+        setFp(true);
         setSearchEntity(1);
         setSearchValue(val);
       } else if (val.length === 7) {
+        setFp(true);
         setSearchEntity(2);
         setSearchValue(val);
       } else {
+        setFp(false);
         return;
       }
       toggleLoading();
@@ -95,7 +68,7 @@ function Page() {
         if (prevProgress >= 100) {
           clearInterval(interval);
           setTimeout(() => {
-            redirect(`/checkout?package=${packageName}&val=${searchValue}`);
+            redirect(`/summary?package=${packageName}&val=${searchValue}`);
           }, 1000);
           return 100;
         }
@@ -106,7 +79,7 @@ function Page() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-16 px-6 xl:mt-24">
-      {!val && (
+      {!isFp && (
         <div className="w-full flex flex-col items-center justify-center gap-6 py-12 px-6 rounded-xl border-2 border-primary">
           <p className="font-ancola text-primary text-center text-2xl lg:text-3xl xl:text-5xl">
             Know Your Ride, Before You Buy

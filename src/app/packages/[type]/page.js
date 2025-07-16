@@ -1,6 +1,7 @@
 "use client";
 
-import { CheckIcon, Loader2 } from "lucide-react";
+import Loading from "@/components/Loading/Loading";
+import { CheckIcon } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
@@ -274,7 +275,7 @@ const PricingCard = ({ tier, type, index, val }) => {
       </ul>
 
       <Link
-        href={`/search?package=${type}-${tier.plan}&val=${val}`}
+        href={`/search?package=${type}-${tier.plan}&val=${val ? val : ""}`}
         className="w-2/3 text-sm py-2 xl:py-3 rounded-full font-hora cursor-pointer bg-primary text-white text-center hover:bg-primary/90"
       >
         Choose Plan
@@ -282,21 +283,3 @@ const PricingCard = ({ tier, type, index, val }) => {
     </motion.div>
   );
 };
-
-function Loading() {
-  return (
-    <motion.div
-      className="flex flex-col items-center justify-center gap-16 px-6 xl:mt-24"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1 }} // Fade-in effect
-    >
-      <motion.div
-        animate={{ rotate: 360 }}
-        transition={{ duration: 1, loop: Infinity, ease: "linear" }}
-      >
-        <Loader2 className="w-12 h-12 text-primary" />
-      </motion.div>
-    </motion.div>
-  );
-}
