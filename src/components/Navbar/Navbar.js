@@ -12,11 +12,13 @@ import { images } from "../../../public/assets/images";
 function Navbar() {
   return (
     <nav className="w-full flex items-center justify-between mb-8 px-6 pb-3">
-      <img
-        src={images.logo}
-        alt="Logo"
-        className="h-24 md:h-24 lg:h-28 xl:h-36 w-24 md:w-24 lg:w-28 xl:w-36"
-      />
+      <Link href="/">
+        <img
+          src={images.logo}
+          alt="Logo"
+          className="h-24 md:h-24 lg:h-28 xl:h-36 w-24 md:w-24 lg:w-28 xl:w-36 cursor-pointer"
+        />
+      </Link>
 
       <div className="max-sm:hidden border-2 border-primary rounded-full flex items-center justify-center gap-3 md:gap-6 xl:gap-12 px-3 py-2 xl:px-6 xl:py-3 text-primary text-sm xl:text-lg font-hora">
         <Link
