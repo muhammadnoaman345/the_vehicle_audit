@@ -86,14 +86,42 @@ function Navbar() {
             </SheetTitle>
           </SheetHeader>
           <div className="flex flex-col gap-3 mt-3 text-white font-hora font-bold pl-4">
-            <Link href="/">Home</Link>
-            <Link href="/#about-us">About Us</Link>
-            <Link href="/#our-services">Our Services</Link>
-            <Link href="/#pricing">Pricing</Link>
-            <Link href="/#testimonials">Testimonials</Link>
-            <Link href="/#faq">FAQs</Link>
-            <Link href="/terms-and-conditions">Terms & Conditions</Link>
-            <Link href="/privacy-policy">Privacy Policy</Link>
+            <Link className="border-b-2 border-white pb-1" href="/">
+              Home
+            </Link>
+            <Link className="border-b-2 border-white pb-1" href="/#about-us">
+              About Us
+            </Link>
+            <Link
+              className="border-b-2 border-white pb-1"
+              href="/#our-services"
+            >
+              Our Services
+            </Link>
+            <Link className="border-b-2 border-white pb-1" href="/#pricing">
+              Pricing
+            </Link>
+            <Link
+              className="border-b-2 border-white pb-1"
+              href="/#testimonials"
+            >
+              Testimonials
+            </Link>
+            <Link className="border-b-2 border-white pb-1" href="/#faq">
+              FAQs
+            </Link>
+            <Link
+              className="border-b-2 border-white pb-1"
+              href="/terms-and-conditions"
+            >
+              Terms & Conditions
+            </Link>
+            <Link
+              className="border-b-2 border-white pb-1"
+              href="/privacy-policy"
+            >
+              Privacy Policy
+            </Link>
           </div>
 
           <button className="focus:border-0 mx-4 mt-auto mb-12 bg-white text-primary rounded-full px-3 py-2 font-hora flex items-center justify-center gap-1">
