@@ -4,7 +4,6 @@ import { useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { images } from "../../../public/assets/images";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 const Hero = () => {
   const [searchEntity, setSearchEntity] = useState(1);
@@ -16,7 +15,8 @@ const Hero = () => {
       !searchValue ||
       searchValue.trim() === "" ||
       (searchEntity === 1 && searchValue.length !== 17) ||
-      (searchEntity === 2 && searchValue.length >= 5 && searchValue.length <= 7)
+      (searchEntity === 2 &&
+        !(searchValue.length >= 5 && searchValue.length <= 7))
     ) {
       setError(true);
       return;
@@ -64,7 +64,10 @@ const Hero = () => {
                   Search by:
                 </p>
                 <p
-                  onClick={() => setSearchEntity(1)}
+                  onClick={() => {
+                    setError("");
+                    setSearchEntity(1);
+                  }}
                   className={`${
                     searchEntity === 1 && "border-3 border-primary"
                   } rounded-lg px-2 py-1 cursor-pointer`}
@@ -72,7 +75,10 @@ const Hero = () => {
                   VIN
                 </p>
                 <p
-                  onClick={() => setSearchEntity(2)}
+                  onClick={() => {
+                    setError("");
+                    setSearchEntity(2);
+                  }}
                   className={`${
                     searchEntity === 2 && "border-3 border-primary"
                   } rounded-lg px-2 py-1 cursor-pointer`}

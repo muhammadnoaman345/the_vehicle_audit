@@ -25,7 +25,7 @@ function Page() {
         setFp(true);
         setSearchEntity(1);
         setSearchValue(val);
-      } else if (val.length === 7) {
+      } else if (searchValue.length >= 5 && searchValue.length <= 7) {
         setFp(true);
         setSearchEntity(2);
         setSearchValue(val);
@@ -42,7 +42,8 @@ function Page() {
       !searchValue ||
       searchValue.trim() === "" ||
       (searchEntity === 1 && searchValue.length !== 17) ||
-      (searchEntity === 2 && searchValue.length >= 5 && searchValue.length <= 7)
+      (searchEntity === 2 &&
+        !(searchValue.length >= 5 && searchValue.length <= 7))
     ) {
       setError(true);
       setLoading(false);
@@ -100,7 +101,10 @@ function Page() {
                   Search by:
                 </p>
                 <p
-                  onClick={() => setSearchEntity(1)}
+                  onClick={() => {
+                    setError("");
+                    setSearchEntity(1);
+                  }}
                   className={`${
                     searchEntity === 1 && "border-3 border-primary"
                   } rounded-lg px-2 py-1 cursor-pointer`}
@@ -108,7 +112,10 @@ function Page() {
                   VIN
                 </p>
                 <p
-                  onClick={() => setSearchEntity(2)}
+                  onClick={() => {
+                    setError("");
+                    setSearchEntity(2);
+                  }}
                   className={`${
                     searchEntity === 2 && "border-3 border-primary"
                   } rounded-lg px-2 py-1 cursor-pointer`}
