@@ -60,9 +60,10 @@ const schema = z.object({
     .string()
     .min(2, "Invalid registration state.")
     .max(50, "Registration state name can't exceed 50 characters.")
-    .optional(),
-  company: z.string().min(2).max(50).optional(),
-  country: z.enum(countryEnum),
+    .optional()
+    .or(z.literal("")),
+  company: z.string().min(2).max(50).optional().or(z.literal("")),
+  country: z.enum(countryEnum, "Please select a country."),
   state: z
     .string()
     .min(2, "State is required.")
@@ -95,7 +96,7 @@ function Page({ clientSecret }) {
   const packageName = searchParams.get("package");
   const type = packageName.split("-")[0];
   const name = packageName.split("-")[1];
-  const amount = name === "silver" ? 1 : name === "gold" ? 2 : 3;
+  const amount = name === "silver" ? 49.99 : name === "gold" ? 84.99 : 109.99;
 
   const db = getFirestore();
   const form = useForm({
@@ -256,7 +257,7 @@ function Page({ clientSecret }) {
                 render={({ field }) => (
                   <FormItem className="gap-1">
                     <FormLabel className="font-hora">
-                      Registration State
+                      Registration State (Optional)
                     </FormLabel>
                     <FormControl>
                       <input
@@ -426,7 +427,7 @@ function StripeWrapper() {
   const searchParams = useSearchParams();
   const packageName = searchParams.get("package");
   const name = packageName.split("-")[1];
-  const amount = name === "silver" ? 1 : name === "gold" ? 2 : 3;
+  const amount = name === "silver" ? 49.99 : name === "gold" ? 84.99 : 109.99;
 
   useEffect(() => {
     fetch("/api/create-payment-intent", {
