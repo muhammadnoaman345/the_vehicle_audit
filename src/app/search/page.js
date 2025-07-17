@@ -129,6 +129,7 @@ function Page() {
                 onChange={(e) =>
                   setSearchValue(e.target.value.trim().toUpperCase())
                 }
+                onKeyDown={(e) => e.keyCode === 13 && toggleLoading()}
                 placeholder={
                   searchEntity === 1
                     ? "Enter VIN number"

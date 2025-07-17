@@ -92,6 +92,7 @@ const Hero = () => {
                 onChange={(e) =>
                   setSearchValue(e.target.value.trim().toUpperCase())
                 }
+                onKeyDown={(e) => e.keyCode === 13 && handleClick()}
                 placeholder={
                   searchEntity === 1
                     ? "Enter VIN number"
