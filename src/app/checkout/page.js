@@ -237,7 +237,7 @@ function Page({ clientSecret }) {
                 render={({ field }) => (
                   <FormItem className="gap-1">
                     <FormLabel className="font-hora">
-                      Registration/Lisence Number
+                      Registration/Lisence Plate Number
                     </FormLabel>
                     <FormControl>
                       <input
@@ -293,9 +293,7 @@ function Page({ clientSecret }) {
                 name="country"
                 render={({ field }) => (
                   <FormItem className="gap-1">
-                    <FormLabel className="font-hora">
-                      Company (optional)
-                    </FormLabel>
+                    <FormLabel className="font-hora">Country</FormLabel>
                     <FormControl>
                       <select
                         className="font-hora text-sm px-2 py-1 border-2 border-primary"
@@ -428,7 +426,7 @@ function StripeWrapper() {
   const searchParams = useSearchParams();
   const packageName = searchParams.get("package");
   const name = packageName.split("-")[1];
-  const amount = name === "silver" ? 1 : name === "gold" ? 2 : 3
+  const amount = name === "silver" ? 1 : name === "gold" ? 2 : 3;
 
   useEffect(() => {
     fetch("/api/create-payment-intent", {
