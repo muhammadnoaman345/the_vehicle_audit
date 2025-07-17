@@ -11,7 +11,7 @@ import Loading from "@/components/Loading/Loading";
 function Page() {
   const [searchEntity, setSearchEntity] = useState(1);
   const [searchValue, setSearchValue] = useState("");
-  const [isFp, setFp] = useState(true);
+  const [isFp, setFp] = useState(false);
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
