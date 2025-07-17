@@ -63,7 +63,9 @@ const schema = z.object({
     .optional()
     .or(z.literal("")),
   company: z.string().min(2).max(50).optional().or(z.literal("")),
-  country: z.enum(countryEnum, "Please select a country."),
+  country: z
+    .union([z.enum(countryEnum), z.literal("")])
+    .refine((val) => val !== "", { message: "Please select a country." }),
   state: z
     .string()
     .min(2, "State is required.")
