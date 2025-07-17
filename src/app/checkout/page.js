@@ -1,19 +1,12 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loadStripe } from "@stripe/stripe-js";
-import {
-  Elements,
-  PaymentElement,
-  useElements,
-  useStripe,
-} from "@stripe/react-stripe-js";
-import { collection, addDoc, getFirestore } from "firebase/firestore";
-import { app } from "../page";
+import { Elements } from "@stripe/react-stripe-js";
 import { motion } from "motion/react";
 import {
   Form,
@@ -25,6 +18,7 @@ import {
 } from "@/components/ui/form";
 import Loading from "@/components/Loading/Loading";
 import { Loader2 } from "lucide-react";
+import StripeForm from "@/components/StripeForm/StripeForm";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
@@ -78,6 +72,10 @@ const schema = z.object({
     .string()
     .min(3, "Please enter a valid postal code.")
     .max(10, "Postal code can't exceed 50 characters"),
+  billingAddress: z
+    .string()
+    .min(10, "City is required.")
+    .max(200, "Billing address can't exceed 200 characters"),
   phoneNumber: z
     .string()
     .regex(
@@ -88,64 +86,65 @@ const schema = z.object({
     .max(15, "Phone number can't exceed 15 characters, including symbols."),
 });
 
-function Page({ clientSecret }) {
+function Page() {
+  const [clientSecret, setClientSecret] = useState(null);
+  const [completeOrder, setCompleteOrder] = useState(false);
+  const [formData, setFormData] = useState(null);
   const [loadingInd, setLoadingInd] = useState(false);
-  const [stripeError, setStripeError] = useState("");
   const searchParams = useSearchParams();
-  const stripe = useStripe();
-  const elements = useElements();
   const val = searchParams.get("val");
   const packageName = searchParams.get("package");
   const type = packageName.split("-")[0];
   const name = packageName.split("-")[1];
   const amount = name === "silver" ? 49.99 : name === "gold" ? 84.99 : 109.99;
 
-  const db = getFirestore();
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      vin: val?.length === 17 ? val : "",
-      lisenceNumber: val?.length >= 5 && val?.length <= 7 ? val : "",
-      registrationState: "",
-      company: "",
-      country: "",
-      state: "",
-      city: "",
-      postalCode: "",
-      phoneNumber: "",
+      firstName: "John",
+      lastName: "Doe",
+      email: "john.doe@example.com",
+      vin: "1HGCM82633A004352", // Example VIN (17 chars)
+      lisenceNumber: "ABC1234", // 7 chars (US/CA style)
+      registrationState: "California",
+      company: "Acme Motors",
+      country: "United States (US)", // Should match one from countryEnum
+      state: "California",
+      city: "Los Angeles",
+      postalCode: "90001", // 5-digit US ZIP
+      billingAddress: "123 Main Street, Suite 100",
+      phoneNumber: "+12345678901",
+      // firstName: "",
+      // lastName: "",
+      // email: "",
+      // vin: val?.length === 17 ? val : "",
+      // lisenceNumber: val?.length >= 5 && val?.length <= 7 ? val : "",
+      // registrationState: "",
+      // company: "",
+      // country: "",
+      // state: "",
+      // city: "",
+      // postalCode: "",
+      // billingAddress: "",
+      // phoneNumber: "",
     },
   });
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = (values) => {
     try {
       setLoadingInd(true);
 
-      const docRef = await addDoc(collection(db, "sales"), {
-        ...values,
-        paymentStatus: "pending",
-        timestamp: new Date(),
-      });
-
-      const { error: submitError } = await elements.submit();
-      if (submitError) {
-        setStripeError(submitError.message);
-        return;
-      }
-
-      const { error } = await stripe.confirmPayment({
-        elements,
-        clientSecret,
-        confirmParams: {
-          return_url: `http://localhost:3000/payment-success?doc-id=${docRef.id}`,
-        },
-      });
-      if (error) {
-        setStripeError(error.message);
-        return;
-      }
+      fetch("/api/create-payment-intent", {
+        method: "POST",
+        body: JSON.stringify({ amount, data: values }),
+        headers: { "Content-Type": "application/json" },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setClientSecret(data.clientSecret);
+          setFormData(values);
+        })
+        .catch((err) => console.log(err));
     } catch (e) {
       console.error("Error adding document: ", e);
     } finally {
@@ -367,6 +366,23 @@ function Page({ clientSecret }) {
               />
               <FormField
                 control={form.control}
+                name="billingAddress"
+                render={({ field }) => (
+                  <FormItem className="gap-1">
+                    <FormLabel className="font-hora">Billing Address</FormLabel>
+                    <FormControl>
+                      <input
+                        className="font-hora text-sm px-2 py-1 border-2 border-primary"
+                        disabled={loadingInd}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
                 name="phoneNumber"
                 render={({ field }) => (
                   <FormItem className="gap-1">
@@ -387,9 +403,22 @@ function Page({ clientSecret }) {
         </div>
 
         <div className="z-10 w-full sm:w-1/2 mt-6 px-6">
-          <div className="w-full">{clientSecret && <PaymentElement />}</div>
-          {stripeError && (
-            <p className="text-sm text-red-500 mt-1 font-hora">{stripeError}</p>
+          {clientSecret && (
+            <Elements
+              stripe={stripePromise}
+              className="w-full"
+              options={{
+                clientSecret,
+                appearance: { theme: "stripe" },
+              }}
+            >
+              <StripeForm
+                clientSecret={clientSecret}
+                completeOrder={completeOrder}
+                formData={formData}
+                setLoadingInd={setLoadingInd}
+              />
+            </Elements>
           )}
           <div className="w-full flex items-center justify-between font-hora lg:text-lg xl:text-2xl mt-6">
             <p className="text-primary">Report:</p>
@@ -402,7 +431,11 @@ function Page({ clientSecret }) {
 
           <div className="w-full mt-6">
             <button
-              onClick={form.handleSubmit(handleSubmit)}
+              onClick={
+                !clientSecret
+                  ? form.handleSubmit(handleSubmit)
+                  : () => setCompleteOrder(true)
+              }
               disabled={loadingInd}
               className="w-full font-hora text-white bg-primary rounded-tl-xl rounded-br-xl py-3 cursor-pointer flex flex-col items-center justify-center"
             >
@@ -413,8 +446,10 @@ function Page({ clientSecret }) {
                 >
                   <Loader2 className="w-8 h-8 text-white" />
                 </motion.div>
-              ) : (
+              ) : clientSecret ? (
                 "Pay now"
+              ) : (
+                "Proceed payment"
               )}
             </button>
           </div>
@@ -424,52 +459,10 @@ function Page({ clientSecret }) {
   );
 }
 
-function StripeWrapper() {
-  const [clientSecret, setClientSecret] = useState(null);
-  const searchParams = useSearchParams();
-  const packageName = searchParams.get("package");
-  const name = packageName.split("-")[1];
-  const amount = name === "silver" ? 49.99 : name === "gold" ? 84.99 : 109.99;
-
-  useEffect(() => {
-    fetch("/api/create-payment-intent", {
-      method: "POST",
-      body: JSON.stringify({ amount }),
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setClientSecret(data.clientSecret);
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
-  if (!clientSecret) {
-    return <Loading />;
-  }
-
-  return (
-    <>
-      {clientSecret && (
-        <Elements
-          stripe={stripePromise}
-          className="w-full"
-          options={{
-            clientSecret,
-            appearance: { theme: "stripe" },
-          }}
-        >
-          <Page clientSecret={clientSecret} />
-        </Elements>
-      )}
-    </>
-  );
-}
-
 export default function PageWithSuspense() {
   return (
     <Suspense fallback={<Loading />}>
-      <StripeWrapper />
+      <Page />
     </Suspense>
   );
 }
