@@ -43,8 +43,8 @@ export default function StripeForm({
         elements,
         clientSecret,
         confirmParams: {
-          return_url: `http://localhost:3000/payment-success`,
-          // return_url: `https://www.thevehicleaudit.com/payment-success`,
+          // return_url: `http://localhost:3000/payment-success`,
+          return_url: `https://www.thevehicleaudit.com/payment-success`,
         },
         redirect: "if_required",
       });
