@@ -96,37 +96,38 @@ function Page() {
   const packageName = searchParams.get("package");
   const type = packageName.split("-")[0];
   const name = packageName.split("-")[1];
-  const amount = name === "silver" ? 49.99 : name === "gold" ? 84.99 : 109.99;
+  // const amount = name === "silver" ? 49.99 : name === "gold" ? 84.99 : 109.99;
+  const amount = name === "silver" ? 1 : name === "gold" ? 2 : 3;
 
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      firstName: "John",
-      lastName: "Doe",
-      email: "john.doe@example.com",
-      vin: "1HGCM82633A004352", // Example VIN (17 chars)
-      lisenceNumber: "ABC1234", // 7 chars (US/CA style)
-      registrationState: "California",
-      company: "Acme Motors",
-      country: "United States (US)", // Should match one from countryEnum
-      state: "California",
-      city: "Los Angeles",
-      postalCode: "90001", // 5-digit US ZIP
-      billingAddress: "123 Main Street, Suite 100",
-      phoneNumber: "+12345678901",
-      // firstName: "",
-      // lastName: "",
-      // email: "",
-      // vin: val?.length === 17 ? val : "",
-      // lisenceNumber: val?.length >= 5 && val?.length <= 7 ? val : "",
-      // registrationState: "",
-      // company: "",
-      // country: "",
-      // state: "",
-      // city: "",
-      // postalCode: "",
-      // billingAddress: "",
-      // phoneNumber: "",
+      // firstName: "John",
+      // lastName: "Doe",
+      // email: "john.doe@example.com",
+      // vin: "1HGCM82633A004352", // Example VIN (17 chars)
+      // lisenceNumber: "ABC1234", // 7 chars (US/CA style)
+      // registrationState: "California",
+      // company: "Acme Motors",
+      // country: "United States (US)", // Should match one from countryEnum
+      // state: "California",
+      // city: "Los Angeles",
+      // postalCode: "90001", // 5-digit US ZIP
+      // billingAddress: "123 Main Street, Suite 100",
+      // phoneNumber: "+12345678901",
+      firstName: "",
+      lastName: "",
+      email: "",
+      vin: val?.length === 17 ? val : "",
+      lisenceNumber: val?.length >= 5 && val?.length <= 7 ? val : "",
+      registrationState: "",
+      company: "",
+      country: "",
+      state: "",
+      city: "",
+      postalCode: "",
+      billingAddress: "",
+      phoneNumber: "",
     },
   });
 
