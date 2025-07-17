@@ -96,8 +96,8 @@ function Page() {
   const packageName = searchParams.get("package");
   const type = packageName.split("-")[0];
   const name = packageName.split("-")[1];
-  // const amount = name === "silver" ? 49.99 : name === "gold" ? 84.99 : 109.99;
-  const amount = name === "silver" ? 1 : name === "gold" ? 2 : 3;
+  const amount = name === "silver" ? 49.99 : name === "gold" ? 84.99 : 109.99;
+  // const amount = name === "silver" ? 1 : name === "gold" ? 2 : 3;
 
   const form = useForm({
     resolver: zodResolver(schema),
