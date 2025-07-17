@@ -67,6 +67,10 @@ const auditMetrics = [
   },
 ];
 
+const socials = {
+  wa: "/assets/images/whatsapp.png",
+};
+
 export const images = {
   heroBackground: "/assets/images/hero-car.jpg",
   heroItems,
@@ -78,4 +82,5 @@ export const images = {
   logo_dark: "/assets/images/logo_dark.png",
   blurImgs,
   auditMetrics,
+  socials,
 };
