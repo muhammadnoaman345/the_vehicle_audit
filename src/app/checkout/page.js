@@ -5,8 +5,6 @@ import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
 import { motion } from "motion/react";
 import {
   Form,
@@ -18,12 +16,6 @@ import {
 } from "@/components/ui/form";
 import Loading from "@/components/Loading/Loading";
 import { Loader2 } from "lucide-react";
-import StripeForm from "@/components/StripeForm/StripeForm";
-
-if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
-  throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
-}
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
 const countryEnum = [
   "United States (US)",
@@ -36,60 +28,31 @@ const countryEnum = [
 ];
 
 const schema = z.object({
-  firstName: z
-    .string()
-    .min(2, "First name is required.")
-    .max(50, "First name can't exceed 50 characters."),
-  lastName: z
-    .string()
-    .min(2, "Last name is required.")
-    .max(50, "Last name can't exceed 50 characters."),
-  email: z.string().email("Please enter a valid email address."),
-  vin: z.string().length(17, "Please enter a valid VIN number."),
-  lisenceNumber: z
-    .string()
-    .min(5, "Please enter a valid lisence number.")
-    .max(7, "Lisence number can't exceed 50 characters."),
-  registrationState: z
-    .string()
-    .min(2, "Invalid registration state.")
-    .max(50, "Registration state name can't exceed 50 characters.")
-    .optional()
-    .or(z.literal("")),
-  company: z.string().min(2).max(50).optional().or(z.literal("")),
-  country: z
-    .union([z.enum(countryEnum), z.literal("")])
-    .refine((val) => val !== "", { message: "Please select a country." }),
-  state: z
-    .string()
-    .min(2, "State is required.")
-    .max(50, "State name can't exceed 50 characters."),
-  city: z
-    .string()
-    .min(2, "City is required.")
-    .max(50, "City name can't exceed 50 characters."),
-  postalCode: z
-    .string()
-    .min(3, "Please enter a valid postal code.")
-    .max(10, "Postal code can't exceed 50 characters"),
-  billingAddress: z
-    .string()
-    .min(10, "City is required.")
-    .max(200, "Billing address can't exceed 200 characters"),
+  firstName: z.string().min(2).max(50),
+  lastName: z.string().min(2).max(50),
+  email: z.string().email(),
+  vin: z.string().length(17),
+  lisenceNumber: z.string().min(5).max(7),
+  registrationState: z.string().optional().or(z.literal("")),
+  company: z.string().optional().or(z.literal("")),
+  country: z.union([z.enum(countryEnum), z.literal("")]).refine((val) => val !== "", {
+    message: "Please select a country.",
+  }),
+  state: z.string().min(2).max(50),
+  city: z.string().min(2).max(50),
+  postalCode: z.string().min(3).max(10),
+  billingAddress: z.string().min(10).max(200),
   phoneNumber: z
     .string()
     .regex(
       /^(?:\+?[0-9]{1,4}[ -]?)?(\(?[0-9]{1,4}\)?[ -]?)?[0-9]{6,14}$/,
       "Please enter a valid phone number."
     )
-    .min(10, "Phone number must have at least 10 digits.")
-    .max(15, "Phone number can't exceed 15 characters, including symbols."),
+    .min(10)
+    .max(15),
 });
 
 function Page() {
-  const [clientSecret, setClientSecret] = useState(null);
-  const [completeOrder, setCompleteOrder] = useState(false);
-  const [formData, setFormData] = useState(null);
   const [loadingInd, setLoadingInd] = useState(false);
   const searchParams = useSearchParams();
   const val = searchParams.get("val");
@@ -97,24 +60,10 @@ function Page() {
   const type = packageName.split("-")[0];
   const name = packageName.split("-")[1];
   const amount = name === "silver" ? 49.99 : name === "gold" ? 84.99 : 109.99;
-  // const amount = name === "silver" ? 1 : name === "gold" ? 2 : 3;
 
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      // firstName: "John",
-      // lastName: "Doe",
-      // email: "john.doe@example.com",
-      // vin: "1HGCM82633A004352", // Example VIN (17 chars)
-      // lisenceNumber: "ABC1234", // 7 chars (US/CA style)
-      // registrationState: "California",
-      // company: "Acme Motors",
-      // country: "United States (US)", // Should match one from countryEnum
-      // state: "California",
-      // city: "Los Angeles",
-      // postalCode: "90001", // 5-digit US ZIP
-      // billingAddress: "123 Main Street, Suite 100",
-      // phoneNumber: "+12345678901",
       firstName: "",
       lastName: "",
       email: "",
@@ -131,23 +80,38 @@ function Page() {
     },
   });
 
-  const handleSubmit = (values) => {
+  const handleSubmit = async (values) => {
     try {
       setLoadingInd(true);
-
-      fetch("/api/create-payment-intent", {
+      const amountStr = (Math.round(amount * 100) / 100).toFixed(2);
+      const formDataWithPackage = {
+        ...values,
+        packageName: `${type} ${name}`.toUpperCase(),
+      };
+      const res = await fetch("/api/create-paypal-payment", {
         method: "POST",
-        body: JSON.stringify({ amount, data: values }),
         headers: { "Content-Type": "application/json" },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setClientSecret(data.clientSecret);
-          setFormData(values);
-        })
-        .catch((err) => console.log(err));
+        body: JSON.stringify({ amount: amountStr, data: formDataWithPackage }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.error("PayPal create order failed:", data);
+        alert("Error creating PayPal order. Check console for details.");
+        return;
+      }
+
+      const approveUrl = data?.links?.find((l) => l.rel === "approve")?.href;
+      if (approveUrl) {
+        window.location.href = approveUrl;
+      } else {
+        console.error("No approve link in response:", data);
+        alert("PayPal approval URL not found.");
+      }
     } catch (e) {
-      console.error("Error adding document: ", e);
+      console.error("Error creating PayPal order:", e);
+      alert("Something went wrong with PayPal.");
     } finally {
       setLoadingInd(false);
     }
@@ -155,7 +119,6 @@ function Page() {
 
   return (
     <div className="w-full px-6 xl:mt-24 relative">
-      {/* Loader */}
       <p className="text-center font-ancola text-primary text-2xl lg:text-3xl xl:text-5xl mb-6">
         Checkout
       </p>
@@ -300,6 +263,7 @@ function Page() {
                     <FormControl>
                       <select
                         className="font-hora text-sm px-2 py-1 border-2 border-primary"
+                        disabled={loadingInd}
                         {...field}
                       >
                         <option value="">Select a country</option>
@@ -399,28 +363,30 @@ function Page() {
                   </FormItem>
                 )}
               />
+
+              <div className="w-full mt-6">
+                <button
+                  type="submit"
+                  disabled={loadingInd}
+                  className="w-full font-hora text-white bg-primary rounded-tl-xl rounded-br-xl py-3 cursor-pointer flex flex-col items-center justify-center"
+                >
+                  {loadingInd ? (
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    >
+                      <Loader2 className="w-8 h-8 text-white" />
+                    </motion.div>
+                  ) : (
+                    "Pay with PayPal"
+                  )}
+                </button>
+              </div>
             </form>
           </Form>
         </div>
 
         <div className="z-10 w-full sm:w-1/2 mt-6 px-6">
-          {clientSecret && (
-            <Elements
-              stripe={stripePromise}
-              className="w-full"
-              options={{
-                clientSecret,
-                appearance: { theme: "stripe" },
-              }}
-            >
-              <StripeForm
-                clientSecret={clientSecret}
-                completeOrder={completeOrder}
-                formData={formData}
-                setLoadingInd={setLoadingInd}
-              />
-            </Elements>
-          )}
           <div className="w-full flex items-center justify-between font-hora lg:text-lg xl:text-2xl mt-6">
             <p className="text-primary">Report:</p>
             <p className="capitalize">{name + " " + type} report</p>
@@ -428,31 +394,6 @@ function Page() {
           <div className="w-full flex items-center justify-between font-hora lg:text-lg xl:text-2xl">
             <p className="text-primary">Total:</p>
             <p>{amount} USD</p>
-          </div>
-
-          <div className="w-full mt-6">
-            <button
-              onClick={
-                !clientSecret
-                  ? form.handleSubmit(handleSubmit)
-                  : () => setCompleteOrder(true)
-              }
-              disabled={loadingInd}
-              className="w-full font-hora text-white bg-primary rounded-tl-xl rounded-br-xl py-3 cursor-pointer flex flex-col items-center justify-center"
-            >
-              {loadingInd ? (
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                >
-                  <Loader2 className="w-8 h-8 text-white" />
-                </motion.div>
-              ) : clientSecret ? (
-                "Pay now"
-              ) : (
-                "Proceed payment"
-              )}
-            </button>
           </div>
         </div>
       </div>
