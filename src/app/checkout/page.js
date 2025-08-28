@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form";
 import Loading from "@/components/Loading/Loading";
 import { Loader2 } from "lucide-react";
+import PayPalSmartButton from "@/components/PayPal/PayPalSmarButton";
 
 const countryEnum = [
   "United States (US)",
@@ -35,9 +36,11 @@ const schema = z.object({
   lisenceNumber: z.string().min(5).max(7),
   registrationState: z.string().optional().or(z.literal("")),
   company: z.string().optional().or(z.literal("")),
-  country: z.union([z.enum(countryEnum), z.literal("")]).refine((val) => val !== "", {
-    message: "Please select a country.",
-  }),
+  country: z
+    .union([z.enum(countryEnum), z.literal("")])
+    .refine((val) => val !== "", {
+      message: "Please select a country.",
+    }),
   state: z.string().min(2).max(50),
   city: z.string().min(2).max(50),
   postalCode: z.string().min(3).max(10),
@@ -54,6 +57,7 @@ const schema = z.object({
 
 function Page() {
   const [loadingInd, setLoadingInd] = useState(false);
+  const [formData, setFormData] = useState(null); // ✅ store form data for PayPal
   const searchParams = useSearchParams();
   const val = searchParams.get("val");
   const packageName = searchParams.get("package");
@@ -81,40 +85,11 @@ function Page() {
   });
 
   const handleSubmit = async (values) => {
-    try {
-      setLoadingInd(true);
-      const amountStr = (Math.round(amount * 100) / 100).toFixed(2);
-      const formDataWithPackage = {
-        ...values,
-        packageName: `${type} ${name}`.toUpperCase(),
-      };
-      const res = await fetch("/api/create-paypal-payment", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: amountStr, data: formDataWithPackage }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        console.error("PayPal create order failed:", data);
-        alert("Error creating PayPal order. Check console for details.");
-        return;
-      }
-
-      const approveUrl = data?.links?.find((l) => l.rel === "approve")?.href;
-      if (approveUrl) {
-        window.location.href = approveUrl;
-      } else {
-        console.error("No approve link in response:", data);
-        alert("PayPal approval URL not found.");
-      }
-    } catch (e) {
-      console.error("Error creating PayPal order:", e);
-      alert("Something went wrong with PayPal.");
-    } finally {
-      setLoadingInd(false);
-    }
+    // ✅ don’t call PayPal here anymore
+    setFormData({
+      ...values,
+      packageName: `${type} ${name}`.toUpperCase(),
+    });
   };
 
   return (
@@ -364,6 +339,7 @@ function Page() {
                 )}
               />
 
+              {/* ✅ Submit button just validates form */}
               <div className="w-full mt-6">
                 <button
                   type="submit"
@@ -378,12 +354,17 @@ function Page() {
                       <Loader2 className="w-8 h-8 text-white" />
                     </motion.div>
                   ) : (
-                    "Pay with PayPal"
+                    "Proceed to Payment"
                   )}
                 </button>
               </div>
             </form>
           </Form>
+          {formData && (
+            <div className="mt-6">
+              <PayPalSmartButton amount={amount} formData={formData} />
+            </div>
+          )}
         </div>
 
         <div className="z-10 w-full sm:w-1/2 mt-6 px-6">

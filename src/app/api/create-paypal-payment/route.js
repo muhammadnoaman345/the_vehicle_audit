@@ -5,8 +5,8 @@ export const runtime = "nodejs";
 const paypal = require("@paypal/checkout-server-sdk");
 
 const environment = new paypal.core.LiveEnvironment(
-  process.env.PAYPAL_CLIENT_ID,
-  process.env.PAYPAL_SECRET      
+  process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+  process.env.NEXT_PUBLIC_PAYPAL_SECRET      
 );
 const client = new paypal.core.PayPalHttpClient(environment);
 const temporaryUserDataStore = new Map();

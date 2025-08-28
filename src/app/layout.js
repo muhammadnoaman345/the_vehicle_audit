@@ -1,7 +1,9 @@
+// app/layout.js
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
 import "./globals.css";
-import Script from "next/script"; // ✅ Import Script
+import PayPalProvider from "@/components/PayPalProvider"; // ✅ your wrapper
+import Script from "next/script";
 import WhatsappIcon from "@/components/WhatsappIcon/WhatsappIcon";
 
 export const metadata = {
@@ -14,10 +16,12 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning className="pt-3">
         <Navbar />
-        <main className="z-10">{children}</main>
+        <main className="z-10">
+          <PayPalProvider>{children}</PayPalProvider> {/* ✅ wrap here */}
+        </main>
         <Footer />
 
-        {/* ✅ Use Next.js Script component instead of raw <script> */}
+        {/* ✅ keep Tawk.to script */}
         <Script id="tawkto" strategy="afterInteractive">
           {`
             var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
