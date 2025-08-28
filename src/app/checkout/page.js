@@ -340,7 +340,9 @@ function Page() {
               />
 
               {/* ✅ Submit button just validates form */}
-              <div className="w-full mt-6">
+              {
+                !formData && (
+                  <div className="w-full mt-6">
                 <button
                   type="submit"
                   disabled={loadingInd}
@@ -358,6 +360,9 @@ function Page() {
                   )}
                 </button>
               </div>
+                ) 
+                
+              }
             </form>
           </Form>
           {formData && (
