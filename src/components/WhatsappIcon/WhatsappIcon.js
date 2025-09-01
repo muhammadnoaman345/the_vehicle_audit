@@ -4,7 +4,7 @@ import { images } from "../../../public/assets/images";
 export default function WhatsappIcon() {
   return (
     <Link
-      href="http://wa.me/+447577303327"
+      href="http://wa.me/+447367068534"
       className="absolute fixed z-50 right-4 bottom-4"
       target="_blank"
       rel="noopener noreferrer"

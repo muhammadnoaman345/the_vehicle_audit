@@ -105,7 +105,7 @@ export default function Footer() {
         </p>
 
         <div className="flex flex-col items-start justify-center gap-3 px-2 font-hora text-white text-sm xl:text-lg">
-          <p>+447577303327</p>
+          <p>+447367068534</p>
           <p>info@thevehicleaudit.com</p>
           <p>124 City Road, London EC1V 2NX UK</p>
           <p>
