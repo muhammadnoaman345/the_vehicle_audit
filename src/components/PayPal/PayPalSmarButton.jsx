@@ -41,4 +41,30 @@ export default function PayPalSmartButton({ amount, formData }) {
               }),
             });
             const details = await res.json();
-            setLoa
+            setLoading(false);
+            console.log("Details", details);
+
+            if (details.success) {
+              if (
+                window.confirm(
+                  "✅ Payment successful! Click OK to return to homepage."
+                )
+              ) {
+                window.location.href = "/";
+              }
+            } else {
+              alert("❌ Payment failed: " + details.error);
+            }
+          } catch (err) {
+            console.error("Capture error:", err);
+            setLoading(false);
+          }
+        }}
+        onError={(err) => {
+          console.error("PayPal button error:", err);
+          alert("PayPal checkout error. Try again.");
+        }}
+      />
+    </div>
+  );
+}
