@@ -2,6 +2,7 @@
 
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import { useState } from "react";
+import emailjs from "emailjs-com"; // ✅ Added EmailJS
 
 export default function PayPalSmartButton({ amount, formData }) {
     const [loading, setLoading] = useState(false);
@@ -43,7 +44,25 @@ export default function PayPalSmartButton({ amount, formData }) {
                         const details = await res.json();
                         setLoading(false);
                         console.log("Details", details);
+
                         if (details.success) {
+                            // ✅ Send confirmation email via EmailJS
+                            emailjs.send(
+                                "Hostinger Business Email",   // Service ID
+                                "template_r7ekmiu",          // Template ID
+                                {
+                                    name: formData.name,
+                                    email: formData.email,
+                                    vin: formData.vin,
+                                    amount: amount,
+                                },
+                                "m981iTkJeNlHMhBR0"          // Public Key
+                            ).then(() => {
+                                console.log("Confirmation email sent!");
+                            }).catch((err) => {
+                                console.error("Email failed:", err);
+                            });
+
                             if (window.confirm("✅ Payment successful! Click OK to return to homepage.")) {
                                 window.location.href = "/";
                             }
