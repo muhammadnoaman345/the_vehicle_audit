@@ -85,11 +85,37 @@ function Page() {
   });
 
   const handleSubmit = async (values) => {
-    // ✅ don’t call PayPal here anymore
-    setFormData({
-      ...values,
-      packageName: `${type} ${name}`.toUpperCase(),
-    });
+
+    try {
+      setLoadingInd(true);
+      const userData = {
+        ...values,
+        packageName: `${type} ${name}`.toUpperCase(),
+        amount,
+      };
+      localStorage.setItem("userData", JSON.stringify(userData));
+      const res = await fetch("/api/create-payment-intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount,
+          formData: userData,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.redirect_url) {
+        window.location.href = data.redirect_url;
+      } else {
+        alert("Failed to start payment. Try again.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong.");
+    } finally {
+      setLoadingInd(false);
+    }
   };
 
   return (
@@ -341,33 +367,54 @@ function Page() {
 
               {/* ✅ Submit button just validates form */}
               {
-                !formData && (
-                  <div className="w-full mt-6">
-                <button
-                  type="submit"
-                  disabled={loadingInd}
-                  className="w-full font-hora text-white bg-primary rounded-tl-xl rounded-br-xl py-3 cursor-pointer flex flex-col items-center justify-center"
-                >
-                  {loadingInd ? (
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                    >
-                      <Loader2 className="w-8 h-8 text-white" />
-                    </motion.div>
-                  ) : (
-                    "Proceed to Payment"
-                  )}
-                </button>
-              </div>
-                ) 
-                
+                // !formData && (
+                //   <div className="w-full mt-6">
+                //     <button
+                //       type="submit"
+                //       disabled={loadingInd}
+                //       className="w-full font-hora text-white bg-primary rounded-tl-xl rounded-br-xl py-3 cursor-pointer flex flex-col items-center justify-center"
+                //     >
+                //       {loadingInd ? (
+                //         <motion.div
+                //           animate={{ rotate: 360 }}
+                //           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                //         >
+                //           <Loader2 className="w-8 h-8 text-white" />
+                //         </motion.div>
+                //       ) : (
+                //         "Proceed to Payment"
+                //       )}
+                //     </button>
+                //   </div>
+                // )
+                <div className="w-full mt-6">
+                  <button
+                    type="submit"
+                    disabled={loadingInd}
+                    className="w-full font-hora text-white bg-primary rounded-tl-xl rounded-br-xl py-3 cursor-pointer flex flex-col items-center justify-center"
+                  >
+                    {loadingInd ? (
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{
+                          duration: 1,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
+                      >
+                        <Loader2 className="w-8 h-8 text-white" />
+                      </motion.div>
+                    ) : (
+                      "Proceed to Payment"
+                    )}
+                  </button>
+                </div>
               }
             </form>
           </Form>
           {formData && (
             <div className="mt-6">
-              <PayPalSmartButton amount={amount} formData={formData} />
+              {/* <PayPalSmartButton amount={amount} formData={formData} /> */}
             </div>
           )}
         </div>
