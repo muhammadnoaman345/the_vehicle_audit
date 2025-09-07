@@ -21,7 +21,7 @@ export default function RootLayout({ children }) {
         </main>
         <Footer />
 
-        {/* ✅ Tawk.to Script */}
+        {/* ✅ Correct Tawk.to Script */}
         <Script
           id="tawk-to"
           strategy="afterInteractive"
@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
                 var s1=document.createElement("script"),
                     s0=document.getElementsByTagName("script")[0];
                 s1.async=true;
-                s1.src='https://embed.tawk.to/688d293ecabd591931918f0e/1j1jmi73c';
+                s1.src='https://embed.tawk.to/68bde50d67c586192c66aa63/1j4isdfct';
                 s1.charset='UTF-8';
                 s1.setAttribute('crossorigin','*');
                 s0.parentNode.insertBefore(s1,s0);
