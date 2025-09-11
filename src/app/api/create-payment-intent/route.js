@@ -74,16 +74,13 @@
 // }
 
 
-// Ziina Integration API
+// ✅ Ziina Integration API (Updated for USD)
 export async function POST(req) {
   try {
     const body = await req.json();
-    const usdAmount = body.amount;
 
-    const rateRes = await fetch("https://api.exchangerate.host/latest?base=USD&symbols=AED");
-    const rateJson = await rateRes.json();
-    const rate = rateJson?.rates?.AED || 3.67;
-    const aedAmount = usdAmount * rate;
+    // Amount comes from frontend in USD (e.g. 10 = $10.00)
+    const usdAmount = body.amount;
 
     const response = await fetch("https://api-v2.ziina.com/api/payment_intent", {
       method: "POST",
@@ -92,12 +89,12 @@ export async function POST(req) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        amount: Math.round(aedAmount * 100),
-        currency_code: "AED",
+        amount: Math.round(usdAmount * 100), // Ziina expects amount in cents
+        currency_code: "USD",                // 👈 switched from AED to USD
         message: `Payment for ${body.formData.packageName}`,
         success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment-success?payment_id={PAYMENT_INTENT_ID}`,
         cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/`,
-        // test: true test payment for ziina
+        // test: true  // 👈 uncomment this line for Ziina test mode
       }),
     });
 
