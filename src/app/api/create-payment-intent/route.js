@@ -1,37 +1,48 @@
 // pages/api/create-payment-intent.js
-// ✅ Ziina Integration API (USD)
+// ✅ Stripe Integration API (USD)
+
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(req) {
   try {
     const body = await req.json();
+    const { amount, formData } = body;
 
-    // Amount comes from frontend in USD (e.g., 10 = $10.00)
-    const usdAmount = body.amount;
-
-    const response = await fetch("https://api-v2.ziina.com/api/payment_intent", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.ZIINA_SECRET_KEY}`,
-        "Content-Type": "application/json",
+    // Create Stripe Checkout Session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      line_items: [
+        {
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: formData.packageName,
+            },
+            unit_amount: Math.round(amount * 100),
+          },
+          quantity: 1,
+        },
+      ],
+      customer_email: formData.email,
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/`,
+      metadata: {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        vin: formData.vin,
+        phoneNumber: formData.phoneNumber,
       },
-      body: JSON.stringify({
-        amount: Math.round(usdAmount * 100), // Ziina expects amount in cents
-        currency_code: "USD",                // switched from AED to USD
-        message: `Payment for ${body.formData.packageName}`,
-        success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment-success?payment_id={PAYMENT_INTENT_ID}`,
-        cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/`,
-        // test: true  // uncomment for Ziina test mode
-      }),
     });
 
-    const data = await response.json();
-
-    return new Response(JSON.stringify(data), { status: 200 });
+    return new Response(JSON.stringify({ url: session.url }), { status: 200 });
 
   } catch (err) {
-    console.error("Ziina API Error:", err);
+    console.error("Stripe API Error:", err);
     return new Response(
-      JSON.stringify({ error: "Payment intent creation failed" }),
+      JSON.stringify({ error: "Stripe payment intent creation failed" }),
       { status: 500 }
     );
   }
