@@ -1,40 +1,38 @@
-import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+// pages/api/create-payment-intent.js
+// ✅ Ziina Integration API (USD)
 
 export async function POST(req) {
   try {
-    const { amount, formData } = await req.json();
+    const body = await req.json();
 
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      mode: "payment",
-      line_items: [
-        {
-          price_data: {
-            currency: "usd",
-            product_data: {
-              name: `${formData.packageName || "Vehicle Audit Report"}`,
-            },
-            unit_amount: Math.round(amount * 100),
-          },
-          quantity: 1,
-        },
-      ],
-      customer_email: formData.email,
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cancel`,
+    // Amount comes from frontend in USD (e.g., 10 = $10.00)
+    const usdAmount = body.amount;
+
+    const response = await fetch("https://api-v2.ziina.com/api/payment_intent", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.ZIINA_SECRET_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        amount: Math.round(usdAmount * 100), // Ziina expects amount in cents
+        currency_code: "USD",                // switched from AED to USD
+        message: `Payment for ${body.formData.packageName}`,
+        success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment-success?payment_id={PAYMENT_INTENT_ID}`,
+        cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/`,
+        // test: true  // uncomment for Ziina test mode
+      }),
     });
 
-    return new Response(JSON.stringify({ url: session.url }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    const data = await response.json();
+
+    return new Response(JSON.stringify(data), { status: 200 });
+
   } catch (err) {
-    console.error(err);
-    return new Response(JSON.stringify({ error: err.message }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    console.error("Ziina API Error:", err);
+    return new Response(
+      JSON.stringify({ error: "Payment intent creation failed" }),
+      { status: 500 }
+    );
   }
 }
