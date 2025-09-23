@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form";
 import Loading from "@/components/Loading/Loading";
 import { Loader2 } from "lucide-react";
+import PayPalSmartButton from "@/components/PayPal/PayPalSmarButton";
 
 const countryEnum = [
   "United States (US)",
@@ -54,6 +55,7 @@ const schema = z.object({
 
 function Page() {
   const [loadingInd, setLoadingInd] = useState(false);
+  const [formData, setFormData] = useState(null); // store form data for PayPal
   const searchParams = useSearchParams();
   const val = searchParams.get("val");
   const packageName = searchParams.get("package");
@@ -80,33 +82,29 @@ function Page() {
     },
   });
 
-  const handleSubmit = (values) => {
-    localStorage.setItem(
-      "userData",
-      JSON.stringify({
-        ...values,
-        packageName: `${type} ${name}`.toUpperCase(),
-        amount,
-      })
-    );
-  };
+  const handleSubmit = async (values) => {
+    try {
+      setLoadingInd(true);
+      const userData = { ...values, packageName: `${type} ${name}`.toUpperCase(), amount };
+      localStorage.setItem("userData", JSON.stringify(userData));
 
-  const storedFormData = JSON.parse(localStorage.getItem("userData") || "{}");
+      const res = await fetch("/api/create-payment-intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount, formData: userData }),
+      });
 
-  const handleCheckout = async () => {
-    setLoadingInd(true);
-    const res = await fetch("/api/create-checkout-session", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount, formData: storedFormData }),
-    });
-    const data = await res.json();
-    setLoadingInd(false);
-
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      alert("Failed to create Stripe session. Try again.");
+      const data = await res.json();
+      if (data.redirect_url) {
+        window.location.href = data.redirect_url;
+      } else {
+        alert("Failed to start payment. Try again.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong.");
+    } finally {
+      setLoadingInd(false);
     }
   };
 
@@ -123,84 +121,87 @@ function Page() {
               className="w-full grid grid-cols-1 space-y-6 px-6 py-3 rounded-xl"
             >
               {[
-                "firstName",
-                "lastName",
-                "email",
-                "vin",
-                "lisenceNumber",
-                "registrationState",
-                "company",
-                "country",
-                "state",
-                "city",
-                "postalCode",
-                "billingAddress",
-                "phoneNumber",
-              ].map((fieldName) => (
+                { name: "firstName", label: "First Name" },
+                { name: "lastName", label: "Last Name" },
+                { name: "email", label: "Email" },
+                { name: "vin", label: "VIN" },
+                { name: "lisenceNumber", label: "Registration/Lisence Plate Number" },
+                { name: "registrationState", label: "Registration State (Optional)" },
+                { name: "company", label: "Company (optional)" },
+                { name: "state", label: "State" },
+                { name: "city", label: "City" },
+                { name: "postalCode", label: "Postal/ZIP Code" },
+                { name: "billingAddress", label: "Billing Address" },
+                { name: "phoneNumber", label: "Phone Number" },
+              ].map(({ name, label }) => (
                 <FormField
-                  key={fieldName}
+                  key={name}
                   control={form.control}
-                  name={fieldName}
+                  name={name}
                   render={({ field }) => (
                     <FormItem className="gap-1">
-                      <FormLabel className="font-hora">
-                        {fieldName.charAt(0).toUpperCase() +
-                          fieldName.slice(1).replace(/([A-Z])/g, " $1")}
-                      </FormLabel>
+                      <FormLabel className="font-hora">{label}</FormLabel>
                       <FormControl>
-                        {fieldName === "country" ? (
-                          <select
-                            className="font-hora text-sm px-2 py-1 border-2 border-primary"
-                            disabled={loadingInd}
-                            {...field}
-                          >
-                            <option value="">Select a country</option>
-                            {countryEnum.map((c) => (
-                              <option key={c} value={c}>
-                                {c}
-                              </option>
-                            ))}
-                          </select>
-                        ) : (
-                          <input
-                            className="font-hora text-sm px-2 py-1 border-2 border-primary"
-                            disabled={loadingInd}
-                            {...field}
-                          />
-                        )}
+                        <input
+                          className="font-hora text-sm px-2 py-1 border-2 border-primary"
+                          disabled={loadingInd}
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               ))}
-
-              {/* Redirect to Stripe Checkout */}
+              <FormField
+                control={form.control}
+                name="country"
+                render={({ field }) => (
+                  <FormItem className="gap-1">
+                    <FormLabel className="font-hora">Country</FormLabel>
+                    <FormControl>
+                      <select
+                        className="font-hora text-sm px-2 py-1 border-2 border-primary"
+                        disabled={loadingInd}
+                        {...field}
+                      >
+                        <option value="">Select a country</option>
+                        {countryEnum.map((country) => (
+                          <option key={country} value={country}>
+                            {country}
+                          </option>
+                        ))}
+                      </select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <div className="w-full mt-6">
                 <button
-                  type="button"
-                  onClick={handleCheckout}
+                  type="submit"
                   disabled={loadingInd}
-                  className="w-full font-hora text-white bg-primary rounded-tl-xl rounded-br-xl py-3 flex justify-center items-center"
+                  className="w-full font-hora text-white bg-primary rounded-tl-xl rounded-br-xl py-3 cursor-pointer flex flex-col items-center justify-center"
                 >
                   {loadingInd ? (
                     <motion.div
                       animate={{ rotate: 360 }}
-                      transition={{
-                        duration: 1,
-                        repeat: Infinity,
-                        ease: "linear",
-                      }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                     >
-                      <Loader2 className="w-6 h-6 text-white" />
+                      <Loader2 className="w-8 h-8 text-white" />
                     </motion.div>
                   ) : (
-                    `Pay ${storedFormData.amount || amount} USD`
+                    "Proceed to Payment"
                   )}
                 </button>
               </div>
             </form>
           </Form>
+          {formData && (
+            <div className="mt-6">
+              {/* <PayPalSmartButton amount={amount} formData={formData} /> */}
+            </div>
+          )}
         </div>
 
         <div className="z-10 w-full sm:w-1/2 mt-6 px-6">
@@ -210,7 +211,7 @@ function Page() {
           </div>
           <div className="w-full flex items-center justify-between font-hora lg:text-lg xl:text-2xl">
             <p className="text-primary">Total:</p>
-            <p>{storedFormData.amount || amount} USD</p>
+            <p>{amount} USD</p>
           </div>
         </div>
       </div>
