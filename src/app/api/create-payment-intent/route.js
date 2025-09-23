@@ -6,34 +6,35 @@ export async function POST(req) {
   try {
     const { amount, formData } = await req.json();
 
-    if (!amount || !formData) {
-      return new Response(
-        JSON.stringify({ error: "Missing amount or form data." }),
-        { status: 400 }
-      );
-    }
-
-    // Create a payment intent with Stripe
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(amount * 100), // convert USD to cents
-      currency: "usd",
+    const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
-      metadata: {
-        customer_name: `${formData.firstName} ${formData.lastName}`,
-        email: formData.email,
-        vin: formData.vin,
-        license_number: formData.lisenceNumber,
-      },
+      mode: "payment",
+      line_items: [
+        {
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: `${formData.packageName || "Vehicle Audit Report"}`,
+            },
+            unit_amount: Math.round(amount * 100),
+          },
+          quantity: 1,
+        },
+      ],
+      customer_email: formData.email,
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cancel`,
     });
 
-    return new Response(
-      JSON.stringify({ client_secret: paymentIntent.client_secret }),
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error(error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ url: session.url }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (err) {
+    console.error(err);
+    return new Response(JSON.stringify({ error: err.message }), {
       status: 500,
+      headers: { "Content-Type": "application/json" },
     });
   }
 }
