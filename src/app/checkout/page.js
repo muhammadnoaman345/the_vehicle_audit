@@ -17,6 +17,13 @@ import {
 import Loading from "@/components/Loading/Loading";
 import { Loader2 } from "lucide-react";
 
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import StripeForm from "@/components/StripePayment"; // make sure this points to your StripeForm component
+
+// Load Stripe publishable key
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+
 const countryEnum = [
   "United States (US)",
   "Canada",
@@ -37,9 +44,7 @@ const schema = z.object({
   company: z.string().optional().or(z.literal("")),
   country: z
     .union([z.enum(countryEnum), z.literal("")])
-    .refine((val) => val !== "", {
-      message: "Please select a country.",
-    }),
+    .refine((val) => val !== "", { message: "Please select a country." }),
   state: z.string().min(2).max(50),
   city: z.string().min(2).max(50),
   postalCode: z.string().min(3).max(10),
@@ -56,6 +61,8 @@ const schema = z.object({
 
 function Page() {
   const [loadingInd, setLoadingInd] = useState(false);
+  const [clientSecret, setClientSecret] = useState(null);
+
   const searchParams = useSearchParams();
   const val = searchParams.get("val");
   const packageName = searchParams.get("package");
@@ -82,11 +89,11 @@ function Page() {
     },
   });
 
+  // Submit handler: create PaymentIntent
   const handleSubmit = async (values) => {
     try {
       setLoadingInd(true);
 
-      // Store form data locally
       const userData = {
         ...values,
         packageName: `${type} ${name}`.toUpperCase(),
@@ -94,7 +101,7 @@ function Page() {
       };
       localStorage.setItem("userData", JSON.stringify(userData));
 
-      // Call your backend API to create Stripe checkout session
+      // Call your backend API to create Stripe PaymentIntent
       const res = await fetch("/api/create-payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -103,11 +110,10 @@ function Page() {
 
       const data = await res.json();
 
-      if (data.redirect_url) {
-        // ✅ Redirect user to Stripe Checkout
-        window.location.href = data.redirect_url;
+      if (data.clientSecret) {
+        setClientSecret(data.clientSecret); // ✅ Show Stripe PaymentElement at bottom
       } else {
-        alert("Failed to start payment. Try again.");
+        alert("Failed to create payment intent. Try again.");
       }
     } catch (err) {
       console.error(err);
@@ -122,6 +128,7 @@ function Page() {
       <p className="text-center font-ancola text-primary text-2xl lg:text-3xl xl:text-5xl mb-6">
         Checkout
       </p>
+
       <div className="z-10 flex max-sm:flex-col items-start justify-center">
         {/* --- Form Section --- */}
         <div className="w-full sm:w-1/2">
@@ -170,7 +177,7 @@ function Page() {
               <div className="w-full mt-6">
                 <button
                   type="submit"
-                  disabled={loadingInd}
+                  disabled={loadingInd || clientSecret}
                   className="w-full font-hora text-white bg-primary rounded-tl-xl rounded-br-xl py-3 flex items-center justify-center"
                 >
                   {loadingInd ? (
@@ -180,6 +187,8 @@ function Page() {
                     >
                       <Loader2 className="w-8 h-8 text-white" />
                     </motion.div>
+                  ) : clientSecret ? (
+                    "Payment Ready"
                   ) : (
                     "Proceed to Payment"
                   )}
@@ -187,6 +196,19 @@ function Page() {
               </div>
             </form>
           </Form>
+
+          {/* --- Stripe Payment Element --- */}
+          {clientSecret && (
+            <div className="mt-6">
+              <Elements stripe={stripePromise} options={{ clientSecret }}>
+                <StripeForm
+                  clientSecret={clientSecret}
+                  formData={form.getValues()}
+                  setLoadingInd={setLoadingInd}
+                />
+              </Elements>
+            </div>
+          )}
         </div>
 
         {/* --- Summary Section --- */}
