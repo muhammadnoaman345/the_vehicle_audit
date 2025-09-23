@@ -1,11 +1,13 @@
 "use client";
 
-import { Suspense, useState, useEffect } from "react";
+import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "motion/react";
+import { Loader2 } from "lucide-react";
+import Loading from "@/components/Loading/Loading";
 import {
   Form,
   FormControl,
@@ -14,21 +16,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import Loading from "@/components/Loading/Loading";
-import { Loader2 } from "lucide-react";
 
-// Stripe
+// ✅ Stripe imports
+import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import {
-  Elements,
-  PaymentElement,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js";
+import { PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-);
+// Your public key
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 const countryEnum = [
   "United States (US)",
@@ -40,6 +35,7 @@ const countryEnum = [
   "Newzealand",
 ];
 
+// Schema (same as before)
 const schema = z.object({
   firstName: z.string().min(2).max(50),
   lastName: z.string().min(2).max(50),
@@ -67,49 +63,64 @@ const schema = z.object({
     .max(15),
 });
 
-// ------------------ STRIPE PAYMENT FORM ------------------
-function StripePaymentForm({ clientSecret }) {
+// Stripe Checkout Component (card input)
+function StripePayment({ amount, userData }) {
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handlePay = async (e) => {
+  const handlePayment = async (e) => {
     e.preventDefault();
     if (!stripe || !elements) return;
 
     setLoading(true);
+
+    // Call backend to create payment intent
+    const res = await fetch("/api/create-payment-intent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount, data: userData }),
+    });
+
+    const { clientSecret } = await res.json();
+
+    // Confirm payment
     const { error } = await stripe.confirmPayment({
       elements,
+      clientSecret,
       confirmParams: {
         return_url: `${window.location.origin}/payment-success`,
       },
     });
 
     if (error) {
-      alert(error.message);
+      setErrorMessage(error.message);
     }
+
     setLoading(false);
   };
 
   return (
-    <form onSubmit={handlePay} className="mt-6">
+    <form onSubmit={handlePayment} className="mt-8 space-y-4">
       <PaymentElement />
+
+      {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+
       <button
         type="submit"
         disabled={!stripe || loading}
-        className="w-full font-hora text-white bg-primary rounded-tl-xl rounded-br-xl py-3 mt-4"
+        className="w-full py-3 bg-primary text-white rounded-md"
       >
-        {loading ? "Processing..." : "Pay Now"}
+        {loading ? "Processing..." : `Pay $${amount}`}
       </button>
     </form>
   );
 }
 
-// ------------------ MAIN CHECKOUT PAGE ------------------
+// Main Page
 function Page() {
-  const [loadingInd, setLoadingInd] = useState(false);
-  const [clientSecret, setClientSecret] = useState(null);
-
+  const [userData, setUserData] = useState(null);
   const searchParams = useSearchParams();
   const val = searchParams.get("val");
   const packageName = searchParams.get("package");
@@ -136,38 +147,14 @@ function Page() {
     },
   });
 
-  const handleSubmit = async (values) => {
-    try {
-      setLoadingInd(true);
-      const userData = {
-        ...values,
-        packageName: `${type} ${name}`.toUpperCase(),
-        amount,
-      };
-      localStorage.setItem("userData", JSON.stringify(userData));
-
-      // 🔹 Call backend to create PaymentIntent
-      const res = await fetch("/api/create-payment-intent", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount,
-          data: userData,
-        }),
-      });
-
-      const data = await res.json();
-      if (data.clientSecret) {
-        setClientSecret(data.clientSecret); // store secret for Elements
-      } else {
-        alert("Failed to start payment. Try again.");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Something went wrong.");
-    } finally {
-      setLoadingInd(false);
-    }
+  const handleSubmit = (values) => {
+    const uData = {
+      ...values,
+      packageName: `${type} ${name}`.toUpperCase(),
+      amount,
+    };
+    setUserData(uData);
+    localStorage.setItem("userData", JSON.stringify(uData));
   };
 
   return (
@@ -175,55 +162,42 @@ function Page() {
       <p className="text-center font-ancola text-primary text-2xl lg:text-3xl xl:text-5xl mb-6">
         Checkout
       </p>
-      <div className="z-10 flex max-sm:flex-col items-start justify-center">
+      <div className="flex max-sm:flex-col items-start justify-center">
         <div className="w-full sm:w-1/2">
-          {!clientSecret ? (
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(handleSubmit)}
-                className="w-full grid grid-cols-1 space-y-6 px-6 py-3 rounded-xl"
-              >
-                {/* All your fields remain unchanged */}
-                {/* ... same input fields as before ... */}
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className="w-full grid grid-cols-1 space-y-6 px-6 py-3 rounded-xl"
+            >
+              {/* ✅ your existing form fields stay here (unchanged) */}
+              {/* ... */}
 
-                <div className="w-full mt-6">
-                  <button
-                    type="submit"
-                    disabled={loadingInd}
-                    className="w-full font-hora text-white bg-primary rounded-tl-xl rounded-br-xl py-3 cursor-pointer flex flex-col items-center justify-center"
-                  >
-                    {loadingInd ? (
-                      <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{
-                          duration: 1,
-                          repeat: Infinity,
-                          ease: "linear",
-                        }}
-                      >
-                        <Loader2 className="w-8 h-8 text-white" />
-                      </motion.div>
-                    ) : (
-                      "Proceed to Payment"
-                    )}
-                  </button>
-                </div>
-              </form>
-            </Form>
-          ) : (
-            // 🔹 Show Stripe Payment Form once clientSecret is ready
-            <Elements stripe={stripePromise} options={{ clientSecret }}>
-              <StripePaymentForm clientSecret={clientSecret} />
+              <div className="w-full mt-6">
+                <button
+                  type="submit"
+                  className="w-full font-hora text-white bg-primary rounded-tl-xl rounded-br-xl py-3"
+                >
+                  Save & Show Payment
+                </button>
+              </div>
+            </form>
+          </Form>
+
+          {/* ✅ After form submit, show Stripe */}
+          {userData && (
+            <Elements stripe={stripePromise}>
+              <StripePayment amount={amount} userData={userData} />
             </Elements>
           )}
         </div>
 
+        {/* Sidebar Summary */}
         <div className="z-10 w-full sm:w-1/2 mt-6 px-6">
-          <div className="w-full flex items-center justify-between font-hora lg:text-lg xl:text-2xl mt-6">
+          <div className="flex items-center justify-between font-hora lg:text-lg xl:text-2xl mt-6">
             <p className="text-primary">Report:</p>
             <p className="capitalize">{name + " " + type} report</p>
           </div>
-          <div className="w-full flex items-center justify-between font-hora lg:text-lg xl:text-2xl">
+          <div className="flex items-center justify-between font-hora lg:text-lg xl:text-2xl">
             <p className="text-primary">Total:</p>
             <p>{amount} USD</p>
           </div>
