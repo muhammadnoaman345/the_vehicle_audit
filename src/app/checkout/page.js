@@ -16,11 +16,6 @@ import {
 } from "@/components/ui/form";
 import Loading from "@/components/Loading/Loading";
 import { Loader2 } from "lucide-react";
-import { CardElement, useStripe, useElements, Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-
-// Stripe publishable key from Vercel env
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 const countryEnum = [
   "United States (US)",
@@ -56,101 +51,6 @@ const schema = z.object({
     .min(10)
     .max(15),
 });
-
-function StripePayment({ amount, formData }) {
-  const stripe = useStripe();
-  const elements = useElements();
-  const [loading, setLoading] = useState(false);
-
-  const handlePayment = async () => {
-    if (!stripe || !elements) return;
-
-    setLoading(true);
-    const cardElement = elements.getElement(CardElement);
-
-    try {
-      const res = await fetch("/api/create-payment-intent", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount, formData }),
-      });
-
-      const { client_secret, error } = await res.json();
-
-      if (error) {
-        alert(error);
-        setLoading(false);
-        return;
-      }
-
-      const result = await stripe.confirmCardPayment(client_secret, {
-        payment_method: {
-          card: cardElement,
-          billing_details: {
-            name: `${formData.firstName} ${formData.lastName}`,
-            email: formData.email,
-            address: {
-              line1: formData.billingAddress,
-              city: formData.city,
-              state: formData.state,
-              postal_code: formData.postalCode,
-              country: formData.country,
-            },
-          },
-        },
-      });
-
-      if (result.error) {
-        alert(result.error.message);
-      } else if (result.paymentIntent.status === "succeeded") {
-        alert("Payment successful!");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Payment failed. Try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="mt-6">
-      <p className="font-hora text-lg mb-2">Enter Card Details:</p>
-      <div className="border-2 border-primary rounded-xl p-3">
-        <CardElement
-          options={{
-            style: {
-              base: {
-                fontSize: "16px",
-                color: "#000",
-                fontFamily: "hora, sans-serif",
-                "::placeholder": { color: "#a0a0a0" },
-                padding: "10px 12px",
-              },
-              invalid: { color: "#f44336" },
-            },
-          }}
-        />
-      </div>
-      <button
-        onClick={handlePayment}
-        disabled={!stripe || loading}
-        className="w-full mt-4 font-hora text-white bg-primary rounded-tl-xl rounded-br-xl py-3 flex justify-center items-center"
-      >
-        {loading ? (
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          >
-            <Loader2 className="w-6 h-6 text-white" />
-          </motion.div>
-        ) : (
-          `Pay ${amount} USD`
-        )}
-      </button>
-    </div>
-  );
-}
 
 function Page() {
   const [loadingInd, setLoadingInd] = useState(false);
@@ -192,6 +92,23 @@ function Page() {
   };
 
   const storedFormData = JSON.parse(localStorage.getItem("userData") || "{}");
+
+  const handleCheckout = async () => {
+    setLoadingInd(true);
+    const res = await fetch("/api/create-checkout-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount, formData: storedFormData }),
+    });
+    const data = await res.json();
+    setLoadingInd(false);
+
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert("Failed to create Stripe session. Try again.");
+    }
+  };
 
   return (
     <div className="w-full px-6 xl:mt-24 relative">
@@ -257,11 +174,14 @@ function Page() {
                   )}
                 />
               ))}
+
+              {/* Redirect to Stripe Checkout */}
               <div className="w-full mt-6">
                 <button
-                  type="submit"
+                  type="button"
+                  onClick={handleCheckout}
                   disabled={loadingInd}
-                  className="w-full font-hora text-white bg-primary rounded-tl-xl rounded-br-xl py-3 flex flex-col items-center justify-center"
+                  className="w-full font-hora text-white bg-primary rounded-tl-xl rounded-br-xl py-3 flex justify-center items-center"
                 >
                   {loadingInd ? (
                     <motion.div
@@ -272,17 +192,15 @@ function Page() {
                         ease: "linear",
                       }}
                     >
-                      <Loader2 className="w-8 h-8 text-white" />
+                      <Loader2 className="w-6 h-6 text-white" />
                     </motion.div>
                   ) : (
-                    "Save Information"
+                    `Pay ${storedFormData.amount || amount} USD`
                   )}
                 </button>
               </div>
             </form>
           </Form>
-
-          <StripePayment amount={amount} formData={storedFormData} />
         </div>
 
         <div className="z-10 w-full sm:w-1/2 mt-6 px-6">
@@ -292,7 +210,7 @@ function Page() {
           </div>
           <div className="w-full flex items-center justify-between font-hora lg:text-lg xl:text-2xl">
             <p className="text-primary">Total:</p>
-            <p>{amount} USD</p>
+            <p>{storedFormData.amount || amount} USD</p>
           </div>
         </div>
       </div>
@@ -300,12 +218,10 @@ function Page() {
   );
 }
 
-export default function PageWithElements() {
+export default function PageWithSuspense() {
   return (
     <Suspense fallback={<Loading />}>
-      <Elements stripe={stripePromise}>
-        <Page />
-      </Elements>
+      <Page />
     </Suspense>
   );
 }
