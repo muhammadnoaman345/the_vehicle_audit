@@ -6,19 +6,12 @@ export async function POST(req) {
   try {
     const { amount, formData } = await req.json();
 
-    if (!amount || !formData) {
-      return new Response(JSON.stringify({ error: "Invalid request" }), { status: 400 });
-    }
-
+    // Create payment intent
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(amount * 100),
+      amount: Math.round(amount * 100), // Stripe expects cents
       currency: "usd",
+      payment_method_types: ["card"],
       receipt_email: formData.email,
-      metadata: {
-        name: `${formData.firstName} ${formData.lastName}`,
-        vin: formData.vin || "",
-        package: formData.packageName || "",
-      },
     });
 
     return new Response(
@@ -27,9 +20,6 @@ export async function POST(req) {
     );
   } catch (err) {
     console.error(err);
-    return new Response(
-      JSON.stringify({ error: "PaymentIntent creation failed" }),
-      { status: 500 }
-    );
+    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
   }
 }
