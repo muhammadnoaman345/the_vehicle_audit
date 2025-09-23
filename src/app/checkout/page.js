@@ -6,9 +6,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "motion/react";
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
-import CheckoutForm from "@/components/StripePayment"; // ✅ we’ll use this component for Stripe card input
 import {
   Form,
   FormControl,
@@ -19,6 +16,11 @@ import {
 } from "@/components/ui/form";
 import Loading from "@/components/Loading/Loading";
 import { Loader2 } from "lucide-react";
+
+// ✅ Stripe imports
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
@@ -59,6 +61,58 @@ const schema = z.object({
     .max(15),
 });
 
+// ✅ Stripe payment form inside checkout
+function StripeCardPayment({ clientSecret, onPaymentComplete }) {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [loading, setLoading] = useState(false);
+
+  const handlePayment = async () => {
+    if (!stripe || !elements) return;
+
+    setLoading(true);
+    const cardElement = elements.getElement(CardElement);
+
+    const result = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: { card: cardElement },
+    });
+
+    if (result.error) {
+      alert(result.error.message);
+    } else {
+      if (result.paymentIntent.status === "succeeded") {
+        alert("Payment successful!");
+        onPaymentComplete();
+      }
+    }
+
+    setLoading(false);
+  };
+
+  return (
+    <div className="mt-6 border p-4 rounded-lg">
+      <CardElement className="p-3 border rounded" />
+      <button
+        type="button"
+        disabled={!stripe || loading}
+        onClick={handlePayment}
+        className="w-full mt-4 bg-green-600 text-white py-3 rounded-xl flex justify-center items-center"
+      >
+        {loading ? (
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          >
+            <Loader2 className="w-6 h-6 text-white" />
+          </motion.div>
+        ) : (
+          "Pay Now"
+        )}
+      </button>
+    </div>
+  );
+}
+
 function Page() {
   const [loadingInd, setLoadingInd] = useState(false);
   const [clientSecret, setClientSecret] = useState(null);
@@ -66,8 +120,8 @@ function Page() {
   const searchParams = useSearchParams();
   const val = searchParams.get("val");
   const packageName = searchParams.get("package");
-  const type = packageName.split("-")[0];
-  const name = packageName.split("-")[1];
+  const type = packageName?.split("-")[0] || "";
+  const name = packageName?.split("-")[1] || "";
   const amount = name === "silver" ? 49.99 : name === "gold" ? 84.99 : 109.99;
 
   const form = useForm({
@@ -97,19 +151,20 @@ function Page() {
         packageName: `${type} ${name}`.toUpperCase(),
         amount,
       };
-      localStorage.setItem("userData", JSON.stringify(userData));
 
-      // ✅ Create a PaymentIntent from backend
       const res = await fetch("/api/create-payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount, formData: userData }),
+        body: JSON.stringify({
+          amount,
+          data: userData,
+        }),
       });
 
       const data = await res.json();
 
       if (data.clientSecret) {
-        setClientSecret(data.clientSecret); // ✅ show Stripe form
+        setClientSecret(data.clientSecret); // ✅ show Stripe card form
       } else {
         alert("Failed to start payment. Try again.");
       }
@@ -123,24 +178,41 @@ function Page() {
 
   return (
     <div className="w-full px-6 xl:mt-24 relative">
-      <p className="text-center font-ancola text-primary text-2xl lg:text-3xl xl:text-5xl mb-6">
+      <p className="text-center text-primary text-2xl lg:text-3xl xl:text-5xl mb-6">
         Checkout
       </p>
-      <div className="z-10 flex max-sm:flex-col items-start justify-center">
+      <div className="flex max-sm:flex-col items-start justify-center">
         <div className="w-full sm:w-1/2">
-          {/* ✅ Existing form */}
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(handleSubmit)}
               className="w-full grid grid-cols-1 space-y-6 px-6 py-3 rounded-xl"
             >
-              {/* ... all your FormFields remain exactly the same ... */}
+              {/* ✅ your existing form fields (firstName, email, etc.) */}
+              <FormField
+                control={form.control}
+                name="firstName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>First Name</FormLabel>
+                    <FormControl>
+                      <input
+                        className="border px-2 py-1"
+                        disabled={loadingInd}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {/* ... repeat other fields same as before ... */}
 
               <div className="w-full mt-6">
                 <button
                   type="submit"
                   disabled={loadingInd}
-                  className="w-full font-hora text-white bg-primary rounded-tl-xl rounded-br-xl py-3 cursor-pointer flex flex-col items-center justify-center"
+                  className="w-full bg-primary text-white py-3 rounded-xl flex justify-center items-center"
                 >
                   {loadingInd ? (
                     <motion.div
@@ -161,22 +233,23 @@ function Page() {
             </form>
           </Form>
 
-          {/* ✅ Show Stripe card payment below form */}
+          {/* ✅ Stripe card payment shows only after form is submitted */}
           {clientSecret && (
-            <div className="mt-8 p-4 border rounded-lg shadow">
-              <Elements stripe={stripePromise} options={{ clientSecret }}>
-                <CheckoutForm />
-              </Elements>
-            </div>
+            <Elements stripe={stripePromise} options={{ clientSecret }}>
+              <StripeCardPayment
+                clientSecret={clientSecret}
+                onPaymentComplete={() => console.log("Payment complete!")}
+              />
+            </Elements>
           )}
         </div>
 
-        <div className="z-10 w-full sm:w-1/2 mt-6 px-6">
-          <div className="w-full flex items-center justify-between font-hora lg:text-lg xl:text-2xl mt-6">
+        <div className="w-full sm:w-1/2 mt-6 px-6">
+          <div className="flex justify-between mt-6">
             <p className="text-primary">Report:</p>
             <p className="capitalize">{name + " " + type} report</p>
           </div>
-          <div className="w-full flex items-center justify-between font-hora lg:text-lg xl:text-2xl">
+          <div className="flex justify-between">
             <p className="text-primary">Total:</p>
             <p>{amount} USD</p>
           </div>
