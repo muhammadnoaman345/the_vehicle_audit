@@ -3,8 +3,6 @@
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "motion/react";
 import {
   Form,
@@ -16,7 +14,6 @@ import {
 } from "@/components/ui/form";
 import Loading from "@/components/Loading/Loading";
 import { Loader2 } from "lucide-react";
-import PayPalSmartButton from "@/components/PayPal/PayPalSmarButton";
 
 const countryEnum = [
   "United States (US)",
@@ -28,34 +25,8 @@ const countryEnum = [
   "Newzealand",
 ];
 
-const schema = z.object({
-  firstName: z.string().min(2).max(50),
-  lastName: z.string().min(2).max(50),
-  email: z.string().email(),
-  vin: z.string().length(17),
-  lisenceNumber: z.string().min(5).max(7),
-  registrationState: z.string().optional().or(z.literal("")),
-  company: z.string().optional().or(z.literal("")),
-  country: z
-    .union([z.enum(countryEnum), z.literal("")])
-    .refine((val) => val !== "", { message: "Please select a country." }),
-  state: z.string().min(2).max(50),
-  city: z.string().min(2).max(50),
-  postalCode: z.string().min(3).max(10),
-  billingAddress: z.string().min(10).max(200),
-  phoneNumber: z
-    .string()
-    .regex(
-      /^(?:\+?[0-9]{1,4}[ -]?)?(\(?[0-9]{1,4}\)?[ -]?)?[0-9]{6,14}$/,
-      "Please enter a valid phone number."
-    )
-    .min(10)
-    .max(15),
-});
-
 function Page() {
   const [loadingInd, setLoadingInd] = useState(false);
-  const [formData, setFormData] = useState(null); // store form data for PayPal
   const searchParams = useSearchParams();
   const val = searchParams.get("val");
   const packageName = searchParams.get("package");
@@ -64,7 +35,6 @@ function Page() {
   const amount = name === "silver" ? 49.99 : name === "gold" ? 84.99 : 109.99;
 
   const form = useForm({
-    resolver: zodResolver(schema),
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -85,7 +55,12 @@ function Page() {
   const handleSubmit = async (values) => {
     try {
       setLoadingInd(true);
-      const userData = { ...values, packageName: `${type} ${name}`.toUpperCase(), amount };
+      const userData = {
+        ...values,
+        packageName: `${type} ${name}`.toUpperCase(),
+        amount,
+      };
+
       localStorage.setItem("userData", JSON.stringify(userData));
 
       const res = await fetch("/api/create-payment-intent", {
@@ -95,8 +70,9 @@ function Page() {
       });
 
       const data = await res.json();
-      if (data.redirect_url) {
-        window.location.href = data.redirect_url;
+
+      if (data.url) {
+        window.location.href = data.url; // redirect to Stripe Checkout
       } else {
         alert("Failed to start payment. Try again.");
       }
@@ -197,11 +173,6 @@ function Page() {
               </div>
             </form>
           </Form>
-          {formData && (
-            <div className="mt-6">
-              {/* <PayPalSmartButton amount={amount} formData={formData} /> */}
-            </div>
-          )}
         </div>
 
         <div className="z-10 w-full sm:w-1/2 mt-6 px-6">
