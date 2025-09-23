@@ -19,6 +19,7 @@ import { Loader2 } from "lucide-react";
 import { CardElement, useStripe, useElements, Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
+// Stripe publishable key from Vercel env
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 const countryEnum = [
@@ -74,7 +75,13 @@ function StripePayment({ amount, formData }) {
         body: JSON.stringify({ amount, formData }),
       });
 
-      const { client_secret } = await res.json();
+      const { client_secret, error } = await res.json();
+
+      if (error) {
+        alert(error);
+        setLoading(false);
+        return;
+      }
 
       const result = await stripe.confirmCardPayment(client_secret, {
         payment_method: {
@@ -275,10 +282,7 @@ function Page() {
             </form>
           </Form>
 
-          {/* Stripe wrapped in Elements */}
-          <Elements stripe={stripePromise}>
-            <StripePayment amount={amount} formData={storedFormData} />
-          </Elements>
+          <StripePayment amount={amount} formData={storedFormData} />
         </div>
 
         <div className="z-10 w-full sm:w-1/2 mt-6 px-6">
@@ -296,10 +300,12 @@ function Page() {
   );
 }
 
-export default function PageWithSuspense() {
+export default function PageWithElements() {
   return (
     <Suspense fallback={<Loading />}>
-      <Page />
+      <Elements stripe={stripePromise}>
+        <Page />
+      </Elements>
     </Suspense>
   );
 }
